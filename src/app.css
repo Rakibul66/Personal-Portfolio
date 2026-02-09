@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: radial-gradient(circle at top, rgba(79, 70, 229, 0.25), transparent 55%),
+    radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.2), transparent 45%),
+    #030712;
+  min-height: 100vh;
+}
+
+.section-wrapper {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-circle {
+  filter: blur(60px);
+  opacity: 0.6;
+}
+
+.gradient-bg {
+  background: radial-gradient(circle at top, rgba(79, 70, 229, 0.4), transparent 50%),
+    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.3), transparent 60%),
+    #04080f;
+}
