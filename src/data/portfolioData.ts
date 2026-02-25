@@ -105,9 +105,9 @@ export const experienceTimeline: Experience[] = [
 
 // --- Skills ---
 export const skillGroups: SkillGroup[] = [
-  { title: "Mobile Stack", description: "Native-grade excellence.", icon: Phone, items: ["Flutter", "Kotlin", "Swift", "Riverpod", "Firebase"] },
+  { title: "Mobile Stack", description: "Native-grade excellence.", icon: Phone, items: ["Flutter", "Kotlin", "SwiftUI", "ReactJS", "Java"] },
   { title: "System Logic", description: "Backend architecture.", icon: Server, items: ["Node.js", "PostgreSQL", "Docker", "REST API"] },
-  { title: "Engineering", description: "Scalable management.", icon: Code, items: ["System Design", "CI/CD", "Technical Leadership"] }
+  { title: "Engineering", description: "Scalable management.", icon: Code, items: ["System Design", "CI/CD", "AI VIBE Code"] }
 ];
 
 // --- ALL Videos (YouTube Carousel) ---
@@ -133,7 +133,7 @@ export const contactMethods: ContactMethod[] = [
   { 
     label: "GitHub", 
     info: "Rakibul66f", 
-    href: "https://github.com/Rakibul66f", 
+    href: "https://github.com/Rakibul66", 
     icon: Github 
   },
   { 
@@ -156,8 +156,8 @@ export const contactMethods: ContactMethod[] = [
   },
   { 
     label: "Signal", 
-    info: "+880 130 896 6989", 
-    href: "sms:+8801308966989", 
+    info: "+880 1315861003", 
+    href: "sms:+8801315861003", 
     icon: MessageSquare 
   }
 ];

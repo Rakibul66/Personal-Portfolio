@@ -15,7 +15,7 @@ interface GlassCardProps {
  * Explicitly exported for VideoGallery and App
  */
 export const GlassCard = ({ children, className = "" }: GlassCardProps) => (
-  <div className={`backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-cyan-500/30 ${className}`}>
+  <div className={`backdrop-blur-xl bg-white/5 border border-white/10 rounded-[8px] overflow-hidden shadow-2xl transition-all duration-500 hover:border-cyan-500/30 ${className}`}>
     {children}
   </div>
 );
@@ -68,9 +68,9 @@ export const ProjectModal = ({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white/5 border border-white/10 rounded-[2.5rem] shadow-2xl no-scrollbar"
+            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white/5 border border-white/10 rounded-[8px] shadow-2xl no-scrollbar"
           >
-            <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 rounded-full transition-colors z-20">
+            <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 rounded-[8px] transition-colors z-20">
               <X size={24} />
             </button>
             <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -86,14 +86,14 @@ export const ProjectModal = ({
                 <p className="text-slate-400 text-lg leading-relaxed">{project.description}</p>
                 <div className="space-y-6">
                   <div className="flex gap-4 items-start">
-                    <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400"><Cpu size={20} /></div>
+                    <div className="p-2 bg-cyan-500/10 rounded-[8px] text-cyan-400"><Cpu size={20} /></div>
                     <div>
                       <h4 className="font-bold text-white">Logic Layer</h4>
                       <p className="text-sm text-slate-500">Optimized high-concurrency architecture.</p>
                     </div>
                   </div>
                   <div className="flex gap-4 items-start">
-                    <div className="p-2 bg-purple-500/10 rounded-lg text-purple-400"><Layout size={20} /></div>
+                    <div className="p-2 bg-purple-500/10 rounded-[8px] text-purple-400"><Layout size={20} /></div>
                     <div>
                       <h4 className="font-bold text-white">Interface Design</h4>
                       <p className="text-sm text-slate-500">Adaptive spatial UI response.</p>
@@ -101,7 +101,7 @@ export const ProjectModal = ({
                   </div>
                 </div>
                 <div className="pt-6">
-                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2">
+                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-[8px] flex items-center justify-center gap-2">
                     Live Transmission <ExternalLink size={18} />
                   </button>
                 </div>

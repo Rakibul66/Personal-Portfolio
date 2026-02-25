@@ -24,7 +24,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={clsx(
-        "font-semibold rounded-full transition ease-in-out duration-300",
+        "font-semibold rounded-[8px] transition ease-in-out duration-300",
         variantClasses[variant],
         sizeClasses[size],
         className

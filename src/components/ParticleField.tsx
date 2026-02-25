@@ -1,84 +1,49 @@
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial, Float, MeshDistortMaterial, Sphere } from '@react-three/drei';
+import { useMemo, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function Particles() {
-  const ref = useRef<THREE.Points>(null!);
-  
-  const particles = useMemo(() => {
-    const temp = new Float32Array(5000 * 3);
-    for (let i = 0; i < 5000; i++) {
-      const stride = i * 3;
-      const r = 2.5 * Math.sqrt(Math.random());
-      const theta = Math.random() * 2 * Math.PI;
-      const phi = Math.acos(2 * Math.random() - 1);
-      temp[stride] = r * Math.sin(phi) * Math.cos(theta);
-      temp[stride + 1] = r * Math.sin(phi) * Math.sin(theta);
-      temp[stride + 2] = r * Math.cos(phi);
+function StarLayer() {
+  const pointsRef = useRef<THREE.Points>(null!);
+  const { mouse } = useThree();
+  const count = 1400;
+
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 18;
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 14;
     }
-    return temp;
+    return arr;
   }, []);
 
   useFrame((state, delta) => {
-    ref.current.rotation.x -= delta / 20;
-    ref.current.rotation.y -= delta / 25;
+    const t = state.clock.getElapsedTime();
+    pointsRef.current.rotation.y += delta * 0.01;
+    pointsRef.current.rotation.x = THREE.MathUtils.damp(pointsRef.current.rotation.x, mouse.y * 0.08, 3, delta);
+    pointsRef.current.position.x = THREE.MathUtils.damp(pointsRef.current.position.x, mouse.x * 0.2, 2.5, delta);
+    pointsRef.current.position.y = Math.sin(t * 0.12) * 0.15;
   });
 
   return (
-    <group rotation={[0, 0, Math.PI / 4]}>
-      <Points ref={ref} positions={particles} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#22d3ee"
-          size={0.006}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
-    </group>
-  );
-}
-
-function FloatingCore() {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    meshRef.current.rotation.x = Math.cos(time / 4) * 0.2;
-    meshRef.current.rotation.y = Math.sin(time / 2) * 0.2;
-  });
-
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <Sphere ref={meshRef} args={[1, 100, 100]} scale={0.8}>
-        <MeshDistortMaterial
-          color="#083344"
-          speed={4}
-          distort={0.4}
-          radius={1}
-          metalness={0.8}
-          roughness={0.2}
-        />
-      </Sphere>
-    </Float>
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <pointsMaterial color="#38bdf8" size={0.02} sizeAttenuation transparent opacity={0.22} depthWrite={false} />
+    </points>
   );
 }
 
 export default function ParticleField() {
   return (
     <div className="fixed inset-0 -z-10 bg-[#020617]">
-      <Canvas 
-        camera={{ position: [0, 0, 2], fov: 75 }} 
-        gl={{ antialias: true }}
-        style={{ pointerEvents: 'none' }} 
-      >
-        <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#22d3ee" />
-        <Particles />
-        <FloatingCore />
+      <Canvas camera={{ position: [0, 0, 5.4], fov: 52 }} dpr={[1, 1.8]} gl={{ antialias: false }} style={{ pointerEvents: 'none' }}>
+        <color attach="background" args={['#020617']} />
+        <StarLayer />
       </Canvas>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.08),transparent_70%)]" />
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(56,189,248,0.14),transparent_46%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.12),transparent_44%)] pointer-events-none" />
     </div>
   );
 }
