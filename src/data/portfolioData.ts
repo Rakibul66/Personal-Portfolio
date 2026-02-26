@@ -13,7 +13,7 @@ import {
 
 // --- Types ---
 export type HeroStat = { value: string; label: string; detail: string; };
-export type ProjectHighlight = { id: string; year: string; title: string; description: string; stack: string; image: string; };
+export type ProjectHighlight = { id: string; year: string; title: string; description: string; stack: string; image: string; url?: string; };
 export type Experience = { company: string; role: string; duration: string; description: string; };
 export type SkillGroup = { title: string; description: string; items: string[]; icon: any; };
 export type Video = { id: string; youtubeId: string; title: string; description: string; };
@@ -37,6 +37,24 @@ export const heroStats: HeroStat[] = [
 
 // --- ALL Featured Projects (Optimized for Wide Swiper) ---
 export const projectHighlights: ProjectHighlight[] = [
+  {
+    id: "nutritionist-probal",
+    year: "2024",
+    title: "Nutritionist Probal",
+    description: "Professional nutrition website built with a clean service flow and conversion-focused layout.",
+    stack: "Web Development · Responsive UI",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/Macbook-Air-www.nutritionistprobal.com.webp",
+    url: "https://www.nutritionistprobal.com/"
+  },
+  {
+    id: "phoenix-auto-recycle",
+    year: "2024",
+    title: "Phoenix Auto Recycle",
+    description: "Automotive recycling business website designed for trust, discoverability, and fast lead capture.",
+    stack: "Web Development · Business Website",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/Macbook-Air-www.phoenixautorecycle.com.webp",
+    url: "https://www.phoenixautorecycle.com/"
+  },
   {
     id: "dhectar",
     year: "2024",

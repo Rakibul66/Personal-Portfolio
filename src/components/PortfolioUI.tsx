@@ -101,9 +101,24 @@ export const ProjectModal = ({
                   </div>
                 </div>
                 <div className="pt-6">
-                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-[8px] flex items-center justify-center gap-2">
-                    Live Transmission <ExternalLink size={18} />
-                  </button>
+                  {project.url ? (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-[8px] flex items-center justify-center gap-2"
+                    >
+                      Live Transmission <ExternalLink size={18} />
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full bg-slate-700/60 text-slate-300 font-bold py-4 rounded-[8px] flex items-center justify-center gap-2 cursor-not-allowed"
+                    >
+                      Live Transmission <ExternalLink size={18} />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
