@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Cpu, Layout } from "lucide-react";
+import { X, ExternalLink, Cpu, Layout, ArrowUpRight } from "lucide-react";
 import * as Data from "../data/portfolioData";
 
 // --- IMPORTANT: LINKED EXPORTS ---
@@ -68,17 +68,37 @@ export const ProjectModal = ({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white/5 border border-white/10 rounded-[8px] shadow-2xl no-scrollbar"
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white/5 border border-white/10 rounded-[8px] shadow-2xl no-scrollbar"
           >
             <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 rounded-[8px] transition-colors z-20">
               <X size={24} />
             </button>
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="relative h-64 lg:h-full min-h-[400px]">
+            <div className="flex flex-col">
+              <div className="relative h-64 md:h-80 lg:h-96">
                 <img src={project.image} className="absolute inset-0 w-full h-full object-cover" alt={project.title} />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#020617]/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/35 to-transparent" />
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute top-5 left-5 p-3 rounded-[8px] bg-black/45 border border-white/20 text-white hover:bg-cyan-500 transition-colors z-20"
+                    aria-label={`Open ${project.title} live url`}
+                  >
+                    <ArrowUpRight size={20} />
+                  </a>
+                ) : null}
+                {project.secondaryImage ? (
+                  <div className="absolute bottom-5 right-5 w-28 md:w-32 rounded-[8px] overflow-hidden border border-white/15 shadow-xl">
+                    <img
+                      src={project.secondaryImage}
+                      className="w-full h-full object-cover"
+                      alt={`${project.title} mobile preview`}
+                    />
+                  </div>
+                ) : null}
               </div>
-              <div className="p-8 lg:p-12 space-y-8 bg-[#020617]/40">
+              <div className="p-8 md:p-10 space-y-8 bg-[#020617]/40">
                 <div>
                   <span className="text-cyan-500 font-mono text-sm tracking-[0.3em] uppercase">{project.year} Architecture</span>
                   <h2 className="text-4xl lg:text-5xl font-black tracking-tighter mt-2">{project.title}</h2>

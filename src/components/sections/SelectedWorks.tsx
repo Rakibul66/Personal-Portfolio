@@ -1,16 +1,13 @@
 import React from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay, EffectCoverflow } from "swiper/modules";
+import { ArrowUpRight } from "lucide-react";
 import * as Data from "../../data/portfolioData";
 
 type ProjectShowcaseCardProps = {
   project: Data.ProjectHighlight;
-  onOpen: (project: Data.ProjectHighlight) => void;
 };
 
-function ProjectShowcaseCard({ project, onOpen }: ProjectShowcaseCardProps) {
+function ProjectShowcaseCard({ project }: ProjectShowcaseCardProps) {
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const glowX = useMotionValue(50);
@@ -40,7 +37,6 @@ function ProjectShowcaseCard({ project, onOpen }: ProjectShowcaseCardProps) {
 
   return (
     <motion.div
-      onClick={() => onOpen(project)}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       whileHover={{ scale: 1.02 }}
@@ -59,21 +55,15 @@ function ProjectShowcaseCard({ project, onOpen }: ProjectShowcaseCardProps) {
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 pointer-events-none" />
-      <div className="absolute bottom-3 right-3">
-        <div className="p-3 rounded-[8px] bg-black/40 border border-white/15 group-hover:bg-cyan-500 transition-all shrink-0">
-          <ArrowRight size={24} />
-        </div>
-      </div>
     </motion.div>
   );
 }
 
 type SelectedWorksProps = {
   projects: Data.ProjectHighlight[];
-  onOpenProject: (project: Data.ProjectHighlight) => void;
 };
 
-export default function SelectedWorks({ projects, onOpenProject }: SelectedWorksProps) {
+export default function SelectedWorks({ projects }: SelectedWorksProps) {
   return (
     <section className="space-y-12 overflow-visible">
       <div className="flex justify-between items-end">
@@ -81,29 +71,37 @@ export default function SelectedWorks({ projects, onOpenProject }: SelectedWorks
           <h2 className="text-4xl font-black tracking-tighter uppercase">Selected Works</h2>
           <div className="h-1 w-12 bg-cyan-500" />
         </div>
-        <div className="flex gap-3">
-          <button className="p-prev p-3 rounded-[8px] bg-white/5 border border-white/10 hover:bg-cyan-500 transition-all z-20"><ChevronLeft size={20} /></button>
-          <button className="p-next p-3 rounded-[8px] bg-white/5 border border-white/10 hover:bg-cyan-500 transition-all z-20"><ChevronRight size={20} /></button>
-        </div>
       </div>
 
-      <Swiper
-        modules={[Navigation, Autoplay, EffectCoverflow]}
-        effect={"coverflow"}
-        grabCursor
-        centeredSlides
-        loop
-        navigation={{ prevEl: ".p-prev", nextEl: ".p-next" }}
-        autoplay={{ delay: 4200, disableOnInteraction: false }}
-        coverflowEffect={{ rotate: 0, stretch: -20, depth: 160, modifier: 1.6, slideShadows: false }}
-        breakpoints={{ 320: { slidesPerView: 1.08 }, 1024: { slidesPerView: 1.8 } }}
-      >
+      <div className="grid grid-cols-1 gap-8">
         {projects.map((project) => (
-          <SwiperSlide key={project.id}>
-            <ProjectShowcaseCard project={project} onOpen={onOpenProject} />
-          </SwiperSlide>
+          <article key={project.id} className="rounded-[8px] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
+            <ProjectShowcaseCard project={project} />
+            <div className="p-6 md:p-8 space-y-4">
+              <div className="space-y-2">
+                <span className="text-cyan-400 text-xs font-mono tracking-[0.25em] uppercase">{project.year}</span>
+                <h3 className="text-2xl md:text-3xl font-black tracking-tight">{project.title}</h3>
+              </div>
+              <p className="text-slate-300 leading-relaxed">{project.description}</p>
+              <p className="text-sm text-slate-400">{project.stack}</p>
+              {project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-[8px] bg-cyan-600 hover:bg-cyan-500 text-white font-semibold px-4 py-2 transition-colors"
+                >
+                  Visit Website <ArrowUpRight size={18} />
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-2 rounded-[8px] bg-slate-700/60 text-slate-300 font-semibold px-4 py-2 cursor-not-allowed">
+                  Website Not Available
+                </span>
+              )}
+            </div>
+          </article>
         ))}
-      </Swiper>
+      </div>
     </section>
   );
 }

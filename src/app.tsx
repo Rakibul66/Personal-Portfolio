@@ -9,7 +9,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 
 import * as Data from "./data/portfolioData";
-import { GlassCard, AnimatedCounter, ProjectModal } from "./components/PortfolioUI";
+import { GlassCard, AnimatedCounter } from "./components/PortfolioUI";
 import ParticleField from "./components/ParticleField";
 import Header from "./components/sections/Header";
 import SelectedWorks from "./components/sections/SelectedWorks";
@@ -22,7 +22,6 @@ const sectionVariants = {
 };
 
 export default function App() {
-  const [activeProject, setActiveProject] = useState<Data.ProjectHighlight | null>(null);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
@@ -82,7 +81,7 @@ export default function App() {
           </div>
         </motion.section>
 
-        <SelectedWorks projects={Data.projectHighlights} onOpenProject={setActiveProject} />
+        <SelectedWorks projects={Data.projectHighlights} />
 
         <motion.section initial="hidden" whileInView="visible" variants={sectionVariants} viewport={{ once: true }} className="space-y-10">
           <div className="space-y-2">
@@ -106,8 +105,6 @@ export default function App() {
         <VideoSection videos={Data.videos} onOpenVideo={setActiveVideo} />
         <FooterSection contacts={Data.contactMethods} />
       </main>
-
-      <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
 
       {activeVideo && (
         <div className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center p-4 backdrop-blur-xl" onClick={() => setActiveVideo(null)}>

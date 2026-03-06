@@ -13,7 +13,7 @@ import {
 
 // --- Types ---
 export type HeroStat = { value: string; label: string; detail: string; };
-export type ProjectHighlight = { id: string; year: string; title: string; description: string; stack: string; image: string; url?: string; };
+export type ProjectHighlight = { id: string; year: string; title: string; description: string; stack: string; image: string; secondaryImage?: string; url?: string; };
 export type Experience = { company: string; role: string; duration: string; description: string; };
 export type SkillGroup = { title: string; description: string; items: string[]; icon: any; };
 export type Video = { id: string; youtubeId: string; title: string; description: string; };
@@ -37,6 +37,16 @@ export const heroStats: HeroStat[] = [
 
 // --- ALL Featured Projects (Optimized for Wide Swiper) ---
 export const projectHighlights: ProjectHighlight[] = [
+  {
+    id: "site-nutritionist",
+    year: "2024",
+    title: "Site Nutritionist",
+    description: "Modern nutritionist website designed for clarity, trust, and conversion across desktop and mobile.",
+    stack: "Web Development · Responsive UI",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/Macbook-Air-site-nutritionist.vercel.app.webp",
+    secondaryImage: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/iPhone-13-PRO-site-nutritionist.vercel.app.webp",
+    url: "https://site-nutritionist.vercel.app/"
+  },
   {
     id: "nutritionist-probal",
     year: "2024",
