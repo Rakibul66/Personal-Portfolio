@@ -4,7 +4,6 @@ import {
   Server, 
   Phone, 
   Code, 
-  Mail, 
   MessageSquare,
   Facebook,
   ShoppingBag,
@@ -13,8 +12,26 @@ import {
 
 // --- Types ---
 export type HeroStat = { value: string; label: string; detail: string; };
-export type ProjectHighlight = { id: string; year: string; title: string; description: string; stack: string; image: string; secondaryImage?: string; url?: string; };
-export type Experience = { company: string; role: string; duration: string; description: string; };
+export type ProjectHighlight = {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  stack: string;
+  image: string;
+  secondaryImage?: string;
+  url?: string;
+  iosUrl?: string;
+  androidUrl?: string;
+  links?: { label: string; href: string; variant?: "primary" | "secondary" | "accent" }[];
+};
+export type Experience = {
+  company: string;
+  role: string;
+  duration: string;
+  meta?: string;
+  location?: string;
+};
 export type SkillGroup = { title: string; description: string; items: string[]; icon: any; };
 export type Video = { id: string; youtubeId: string; title: string; description: string; };
 export type ContactMethod = { label: string; info: string; href: string; icon: any; };
@@ -24,7 +41,6 @@ export const portfolioConfig = {
   name: "RAKIBUL.H",
   fullName: "MD. Rakibul Hasan",
   title: "Flutter & Native Android Expert",
-  tagline: "Global Product Partner",
   description: "CEO at Bponi. Engineering scalable mobile ecosystems and premium digital products.",
 };
 
@@ -37,6 +53,25 @@ export const heroStats: HeroStat[] = [
 
 // --- ALL Featured Projects (Optimized for Wide Swiper) ---
 export const projectHighlights: ProjectHighlight[] = [
+  {
+    id: "supersaver",
+    year: "2025",
+    title: "SuperSaver",
+    description: "Modern savings and rewards platform experience built for clarity, trust, and conversion across digital touchpoints.",
+    stack: "Web Platform · Product UI",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/Macbook-Air-www.supersaver.club.webp",
+    url: "https://www.supersaver.club/"
+  },
+  {
+    id: "evacado",
+    year: "2025",
+    title: "Evacado",
+    description: "Mobile app for Envato sellers focused on tracking sales performance and managing marketplace insights on the go.",
+    stack: "Flutter · Android · iOS",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/evacado.png",
+    iosUrl: "https://apps.apple.com/us/app/evacado-envato-sales-master/id6758573315",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.bponi.evacado"
+  },
   {
     id: "site-nutritionist",
     year: "2024",
@@ -71,7 +106,12 @@ export const projectHighlights: ProjectHighlight[] = [
     title: "Dehctar Website",
     description: "React.js marketing site built end-to-end to elevate FinTech storytelling.",
     stack: "React.js · Tailwind",
-    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/dhectar_web.webp"
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/dhectar_web.webp",
+    links: [
+      { label: "Website", href: "https://dhectar.com/", variant: "primary" },
+      { label: "Dhectar X", href: "https://apps.apple.com/us/app/dhectar-x/id6745840908", variant: "secondary" },
+      { label: "Dhectar DAB", href: "https://apps.apple.com/us/app/dhectar-dab/id6744033962", variant: "accent" }
+    ]
   },
   {
     id: "gabfest",
@@ -79,7 +119,8 @@ export const projectHighlights: ProjectHighlight[] = [
     title: "GabFest Radio",
     description: "Live radio interface with rich media modules and polished brand animation.",
     stack: "React · Web Player",
-    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/gabfest_web.au.webp"
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/gabfest_web.au.webp",
+    url: "https://thegabfestradio.com.au/"
   },
   {
     id: "switch-fm",
@@ -111,7 +152,8 @@ export const projectHighlights: ProjectHighlight[] = [
     title: "Geoquake",
     description: "Flutter data and alert dashboard for earthquake tracking across platforms.",
     stack: "Flutter · Google Maps",
-    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/geoquake.png"
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/geoquake.png",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.bponi.earthquake"
   },
   {
     id: "eman-wellness",
@@ -123,12 +165,56 @@ export const projectHighlights: ProjectHighlight[] = [
   }
 ];
 
-// --- ALL Experience ---
-export const experienceTimeline: Experience[] = [
-  { company: "SuperSaver", role: "Lead Frontend Engineer", duration: "May 2023 – Present", description: "Co-led the web platform rewrite, optimizing for conversion and accessibility across 30+ countries." },
-  { company: "Dehctar", role: "Product Engineer", duration: "Jan 2022 – Apr 2023", description: "Built the consumer-facing dashboard, streamlining onboarding through realtime data." },
-  { company: "Jahkno Radio", role: "Freelance App Developer", duration: "Jul 2021 – Dec 2021", description: "Shipped radio streaming + monetization app reaching 5K daily listeners." },
-  { company: "Switch FM London", role: "Creative Tech Partner", duration: "Jan 2021 – Jun 2021", description: "Directed studio-quality web experiences for live broadcast events." }
+// --- Experience ---
+export const officeExperience: Experience[] = [
+  {
+    company: "Bponi",
+    role: "CEO of Bponi",
+    duration: "Jan 2025 - Present",
+    meta: "Full-time",
+    location: "Dhaka, Bangladesh · On-site",
+  },
+  {
+    company: "DevsNest LLC",
+    role: "Software Engineer",
+    duration: "Oct 2023 - Feb 2025",
+    meta: "Full-time",
+    location: "Dhaka, Bangladesh · On-site",
+  },
+  {
+    company: "Artificial Soft",
+    role: "Junior Android Developer",
+    duration: "Apr 2022 - Sep 2023",
+    meta: "Full-time",
+    location: "Dhaka, Bangladesh",
+  }
+];
+
+export const freelanceExperience: Experience[] = [
+  {
+    company: "SuperSaver",
+    role: "Lead Frontend Engineer",
+    duration: "May 2023 - Present",
+    meta: "Freelance",
+  },
+  {
+    company: "Dehctar",
+    role: "Product Engineer",
+    duration: "Jan 2022 - Apr 2023",
+    meta: "Freelance",
+  },
+  {
+    company: "Jahkno Radio",
+    role: "Freelance App Developer",
+    duration: "Jul 2021 - Dec 2021",
+    meta: "Freelance",
+  },
+  {
+    company: "Switch FM London",
+    role: "Creative Tech Partner",
+    duration: "Jan 2021 - Jun 2021",
+    meta: "Freelance",
+  }
 ];
 
 // --- Skills ---

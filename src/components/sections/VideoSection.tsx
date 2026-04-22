@@ -11,12 +11,15 @@ type VideoSectionProps = {
 
 export default function VideoSection({ videos, onOpenVideo }: VideoSectionProps) {
   return (
-    <section className="space-y-12">
-      <div className="flex justify-between items-end">
-        <h2 className="text-4xl font-black tracking-tighter uppercase">Process Transmission</h2>
+    <section className="section-shell space-y-12">
+      <div className="flex flex-col gap-5 md:flex-row md:justify-between md:items-end">
+        <div className="space-y-2">
+          <span className="eyebrow">Motion</span>
+          <h2 className="display-title text-3xl md:text-5xl font-extrabold tracking-[-0.05em]">Launch Archive</h2>
+        </div>
         <div className="flex gap-3">
-          <button className="v-prev p-3 rounded-[8px] bg-white/5 border border-white/10 hover:bg-red-500 transition-all z-20"><ChevronLeft size={20} /></button>
-          <button className="v-next p-3 rounded-[8px] bg-white/5 border border-white/10 hover:bg-red-500 transition-all z-20"><ChevronRight size={20} /></button>
+          <button className="v-prev flex h-12 w-12 items-center justify-center border border-white/10 hover:border-cyan-400/30 transition-all z-20"><ChevronLeft size={20} /></button>
+          <button className="v-next flex h-12 w-12 items-center justify-center border border-white/10 hover:border-cyan-400/30 transition-all z-20"><ChevronRight size={20} /></button>
         </div>
       </div>
 
@@ -31,14 +34,15 @@ export default function VideoSection({ videos, onOpenVideo }: VideoSectionProps)
       >
         {videos.map((video) => (
           <SwiperSlide key={video.id}>
-            <div onClick={() => onOpenVideo(video.youtubeId)} className="cursor-pointer group relative aspect-video rounded-[8px] overflow-hidden border border-white/5 bg-slate-900/60">
-              <img src={Data.getThumbnail(video.youtubeId)} className="w-full h-full object-cover opacity-70 transition-transform group-hover:scale-110" alt={video.title} loading="lazy" decoding="async" />
+            <div onClick={() => onOpenVideo(video.youtubeId)} className="cursor-pointer group relative aspect-video overflow-hidden border border-white/[0.08] bg-slate-950/30">
+              <img src={Data.getThumbnail(video.youtubeId)} className="w-full h-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110" alt={video.title} loading="lazy" decoding="async" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-[8px] bg-red-600/90 flex items-center justify-center group-hover:scale-110 transition-transform"><Play fill="white" size={28} className="ml-1 text-white" /></div>
+                <div className="w-16 h-16 border border-white/15 bg-black/30 text-cyan-200 flex items-center justify-center group-hover:scale-110 transition-transform"><Play fill="currentColor" size={28} className="ml-1" /></div>
               </div>
-              <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black to-transparent">
-                <h4 className="font-bold text-white">{video.title}</h4>
-                <p className="text-xs text-slate-300 mt-1">{video.description}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#020611] via-[#020611]/[0.15] to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 p-6">
+                <h4 className="display-title text-xl font-bold text-white">{video.title}</h4>
+                <p className="text-sm text-slate-300 mt-2">{video.description}</p>
               </div>
             </div>
           </SwiperSlide>

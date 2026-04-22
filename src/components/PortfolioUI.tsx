@@ -15,7 +15,9 @@ interface GlassCardProps {
  * Explicitly exported for VideoGallery and App
  */
 export const GlassCard = ({ children, className = "" }: GlassCardProps) => (
-  <div className={`backdrop-blur-xl bg-white/5 border border-white/10 rounded-[8px] overflow-hidden shadow-2xl transition-all duration-500 hover:border-cyan-500/30 ${className}`}>
+  <div
+    className={`glass-panel border border-white/10 overflow-hidden shadow-[0_22px_70px_rgba(2,8,23,0.28)] transition-all duration-500 hover:border-cyan-400/30 hover:-translate-y-1 ${className}`}
+  >
     {children}
   </div>
 );
@@ -68,9 +70,9 @@ export const ProjectModal = ({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white/5 border border-white/10 rounded-[8px] shadow-2xl no-scrollbar"
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-panel border border-white/10 rounded-[28px] shadow-2xl no-scrollbar"
           >
-            <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 rounded-[8px] transition-colors z-20">
+            <button onClick={onClose} className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-colors z-20">
               <X size={24} />
             </button>
             <div className="flex flex-col">
@@ -82,14 +84,14 @@ export const ProjectModal = ({
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute top-5 left-5 p-3 rounded-[8px] bg-black/45 border border-white/20 text-white hover:bg-cyan-500 transition-colors z-20"
+                    className="absolute top-5 left-5 p-3 rounded-2xl bg-black/45 border border-white/20 text-white hover:bg-cyan-500 transition-colors z-20"
                     aria-label={`Open ${project.title} live url`}
                   >
                     <ArrowUpRight size={20} />
                   </a>
                 ) : null}
                 {project.secondaryImage ? (
-                  <div className="absolute bottom-5 right-5 w-28 md:w-32 rounded-[8px] overflow-hidden border border-white/15 shadow-xl">
+                  <div className="absolute bottom-5 right-5 w-28 md:w-32 rounded-[20px] overflow-hidden border border-white/[0.15] shadow-xl">
                     <img
                       src={project.secondaryImage}
                       className="w-full h-full object-cover"
@@ -101,7 +103,7 @@ export const ProjectModal = ({
               <div className="p-8 md:p-10 space-y-8 bg-[#020617]/40">
                 <div>
                   <span className="text-cyan-500 font-mono text-sm tracking-[0.3em] uppercase">{project.year} Architecture</span>
-                  <h2 className="text-4xl lg:text-5xl font-black tracking-tighter mt-2">{project.title}</h2>
+                  <h2 className="display-title text-4xl lg:text-5xl font-black tracking-tighter mt-2">{project.title}</h2>
                 </div>
                 <p className="text-slate-400 text-lg leading-relaxed">{project.description}</p>
                 <div className="space-y-6">
