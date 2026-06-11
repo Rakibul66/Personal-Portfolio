@@ -112,13 +112,25 @@ function ProjectShowcaseCard({ project, reverse = false }: ProjectShowcaseCardPr
             className="relative mx-auto w-full max-w-[560px] pt-4 md:pt-8"
           >
             <div className="overflow-hidden border border-white/[0.08] bg-slate-950/70 shadow-[0_16px_40px_rgba(2,8,23,0.28)]">
-              <img
-                src={project.image}
-                className="aspect-[16/10] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-                alt={project.title}
-                loading="lazy"
-                decoding="async"
-              />
+              {project.image ? (
+                <img
+                  src={project.image}
+                  className="aspect-[16/10] w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                  alt={project.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <div className="flex aspect-[16/10] w-full flex-col justify-between bg-[linear-gradient(135deg,rgba(14,165,233,0.18),rgba(15,23,42,0.94)_46%,rgba(217,249,157,0.12))] p-6">
+                  <span className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-200">Mobile App</span>
+                  <div>
+                    <h4 className="display-title text-3xl font-extrabold tracking-[-0.04em] text-white md:text-4xl">
+                      {project.title}
+                    </h4>
+                    <p className="mt-3 text-sm uppercase tracking-[0.22em] text-slate-400">{project.stack}</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {project.secondaryImage ? (

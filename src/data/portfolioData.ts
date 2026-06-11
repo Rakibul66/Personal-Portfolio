@@ -18,7 +18,7 @@ export type ProjectHighlight = {
   title: string;
   description: string;
   stack: string;
-  image: string;
+  image?: string;
   secondaryImage?: string;
   url?: string;
   iosUrl?: string;
@@ -35,6 +35,8 @@ export type Experience = {
 export type SkillGroup = { title: string; description: string; items: string[]; icon: any; };
 export type Video = { id: string; youtubeId: string; title: string; description: string; };
 export type ContactMethod = { label: string; info: string; href: string; icon: any; };
+export type HireMarketplace = { label: string; info: string; href?: string; icon: any; };
+export type AffiliateBanner = { eyebrow: string; title: string; detail: string; href: string; };
 
 // --- Config ---
 export const portfolioConfig = {
@@ -73,14 +75,31 @@ export const projectHighlights: ProjectHighlight[] = [
     androidUrl: "https://play.google.com/store/apps/details?id=com.bponi.evacado"
   },
   {
-    id: "site-nutritionist",
-    year: "2024",
-    title: "Site Nutritionist",
-    description: "Modern nutritionist website designed for clarity, trust, and conversion across desktop and mobile.",
-    stack: "Web Development · Responsive UI",
-    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/Macbook-Air-site-nutritionist.vercel.app.webp",
-    secondaryImage: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/iPhone-13-PRO-site-nutritionist.vercel.app.webp",
-    url: "https://site-nutritionist.vercel.app/"
+    id: "eduayna-hr",
+    year: "2025",
+    title: "EDUAYNA HR",
+    description: "Human resources app experience built for clear employee workflows and reliable mobile access.",
+    stack: "Flutter · HR Management",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/edu_hr.png",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.eduayna.hr"
+  },
+  {
+    id: "ayna-e-pay",
+    year: "2025",
+    title: "AynaE Pay",
+    description: "Mobile payment app focused on practical Android transactions and streamlined account access.",
+    stack: "Flutter · Payment App",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.ayna.epay"
+  },
+  {
+    id: "bponi-suite",
+    year: "2025",
+    title: "Bponi Suite",
+    description: "Business suite app built for connected operations across Android and iOS platforms.",
+    stack: "Flutter · Android · iOS",
+    image: "https://raw.githubusercontent.com/Rakibul66/Recent-Project-Apk/refs/heads/main/roxy_portfolio/bponi_suite.png",
+    iosUrl: "https://apps.apple.com/us/app/bponi-suite/id6754082422",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.bponi.suite&hl=en"
   },
   {
     id: "nutritionist-probal",
@@ -224,6 +243,34 @@ export const skillGroups: SkillGroup[] = [
   { title: "Engineering", description: "Scalable management.", icon: Code, items: ["System Design", "CI/CD", "AI VIBE Code"] }
 ];
 
+export const affiliateBanner: AffiliateBanner = {
+  eyebrow: "Premium Affiliate",
+  title: "PowerQuiz Trivia Challenge iOS Native App",
+  detail: "Codester marketplace item",
+  href: "https://www.codester.com/items/66156/powerquiz-trivia-challenge-ios-native-app?ref=Rf9Soft",
+};
+
+export const hireMarketplaces: HireMarketplace[] = [
+  {
+    label: "Support Kori",
+    info: "Support and direct purchase",
+    href: "https://www.supportkori.com/rakibulhasanroxy",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Gumroad",
+    info: "Flutter Shop digital product",
+    href: "https://2035859024973.gumroad.com/l/odfciw",
+    icon: Globe,
+  },
+  {
+    label: "Codester",
+    info: "Rf9Soft marketplace products",
+    href: "https://www.codester.com/Rf9Soft",
+    icon: Code,
+  },
+];
+
 // --- ALL Videos (YouTube Carousel) ---
 export const videos: Video[] = [
   { id: "1", youtubeId: "AgC_Wq7aWYU", title: "jahkno Radio", description: "Audio streaming project demo." },
@@ -258,8 +305,8 @@ export const contactMethods: ContactMethod[] = [
   },
   { 
     label: "CodeCanyon", 
-    info: "Apptionary", 
-    href: "https://codecanyon.net/user/apptionary/portfolio", 
+    info: "CorbinCore", 
+    href: "https://codecanyon.net/user/corbincore/portfolio", 
     icon: Globe 
   },
   { 
