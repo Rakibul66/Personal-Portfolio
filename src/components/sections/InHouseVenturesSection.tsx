@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Flame, Globe, ExternalLink, Sparkles, Building2, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
-import { apiService, VentureData } from "../../services/api";
+import { apiService, VentureData, resolveMediaUrl } from "../../services/api";
 
 export default function InHouseVenturesSection() {
   const [ventures, setVentures] = useState<VentureData[]>([]);
@@ -46,7 +46,7 @@ export default function InHouseVenturesSection() {
                 {venture.imageUrl ? (
                   <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-slate-950 border border-slate-800 mb-6">
                     <img
-                      src={venture.imageUrl}
+                      src={resolveMediaUrl(venture.imageUrl)}
                       alt={venture.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {

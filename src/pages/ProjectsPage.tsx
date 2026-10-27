@@ -14,7 +14,7 @@ import Header from "../components/sections/Header";
 import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
-import { apiService, ProjectData, ProfileData } from "../services/api";
+import { apiService, ProjectData, ProfileData, resolveMediaUrl } from "../services/api";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -194,7 +194,7 @@ export default function ProjectsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginatedProjects.map((project, idx) => {
                   const coverImg =
-                    project.imageUrl ||
+                    resolveMediaUrl(project.imageUrl) ||
                     "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80";
                   return (
                     <article
@@ -291,7 +291,7 @@ export default function ProjectsPage() {
                 {paginatedProjects.map((project, idx) => {
                   const isReverse = idx % 2 === 1;
                   const coverImg =
-                    project.imageUrl ||
+                    resolveMediaUrl(project.imageUrl) ||
                     "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80";
                   return (
                     <article

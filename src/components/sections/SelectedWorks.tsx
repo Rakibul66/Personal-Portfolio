@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, FolderGit2, ArrowRight, ExternalLink } from "lucide-react";
-import { ProjectData } from "../../services/api";
+import { ProjectData, resolveMediaUrl } from "../../services/api";
 
 type SelectedWorksProps = {
   projects: ProjectData[];
@@ -32,7 +32,7 @@ export default function SelectedWorks({ projects }: SelectedWorksProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.slice(0, 6).map((project, index) => {
           const coverImg =
-            project.imageUrl ||
+            resolveMediaUrl(project.imageUrl) ||
             "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80";
 
           return (
