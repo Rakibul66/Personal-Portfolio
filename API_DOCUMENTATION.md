@@ -30,8 +30,8 @@ Authenticate admin user and acquire JWT bearer token.
 - **Request Body**:
 ```json
 {
-  "email": "admin@rakibulhr.dev",
-  "password": "admin_secure_password_123"
+  "email": "admin@example.com",
+  "password": "your_secure_password"
 }
 ```
 - **Response `200 OK`**:
@@ -40,8 +40,8 @@ Authenticate admin user and acquire JWT bearer token.
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "id": "e8a9037f-92c8-4f91-863b-01d6421c4f53",
-    "email": "admin@rakibulhr.dev",
-    "name": "MD. Rakibul Hasan"
+    "email": "admin@example.com",
+    "name": "Admin User"
   }
 }
 ```
