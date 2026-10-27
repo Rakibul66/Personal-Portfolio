@@ -124,7 +124,7 @@ This project is architected for zero-cost production deployment using **Render**
    - **Root Directory**: `server`
    - **Runtime**: `Node`
    - **Build Command**: `npm install && npx prisma generate && npm run build`
-   - **Start Command**: `npm run start:prod`
+   - **Start Command**: `node dist/src/main`
 5. Under **Environment Variables**, add:
    - `DATABASE_URL`: `postgresql://neondb_owner:npg_0BYbJivoKu4N@ep-weathered-surf-azl49bdw-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require`
    - `JWT_SECRET`: `super-secret-jwt-key-rakibulhr-portfolio-2026`
