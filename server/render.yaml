@@ -1,0 +1,22 @@
+# Render Blueprint Specification (100% Free Tier)
+services:
+  - type: web
+    name: rakibulhr-portfolio-api
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false # Paste your free Neon.tech or Supabase connection string in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@rakibulhr.dev
+      - key: ADMIN_PASSWORD
+        sync: false
