@@ -70,11 +70,6 @@ npm run dev
 
 ---
 
-## 🔐 Admin Studio Credentials
-
-- **URL**: `http://localhost:5173/admin`
-- **Email**: `admin@rakibulhr.dev`
-- **Password**: `admin_secure_password_123`
 
 ---
 
