@@ -80,8 +80,12 @@ npm run dev
 
 ## 📡 REST API Endpoints Summary
 
+> 📘 **Full API Documentation**: Complete request/response schemas, JWT auth guides, and payload examples are available in [API_DOCUMENTATION.md](file:///Users/roxy/Downloads/RakibulHR/API_DOCUMENTATION.md).
+
 | Method | Endpoint | Access | Purpose |
 | :--- | :--- | :--- | :--- |
+| `GET` | `/` | Public | Live API Health Check & Route Index |
+| `POST` | `/auth/login` | Public | Acquire Admin Bearer JWT Token |
 | `GET` | `/projects` | Public | List portfolio projects |
 | `POST` | `/projects` | Admin | Create new project |
 | `PATCH` | `/projects/:id` | Admin | Update project |
