@@ -18,10 +18,6 @@ server/.env.*.local
 dist/
 build/
 
-# Server Uploads & Dynamic Storage
-server/uploads/
-uploads/
-
 # Logs
 npm-debug.log*
 yarn-debug.log*

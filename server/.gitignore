@@ -9,8 +9,5 @@ node_modules/
 # Output & Build
 dist/
 
-# Uploaded Files
-uploads/
-
 # OS files
 .DS_Store
