@@ -99,6 +99,51 @@ npm run dev
 
 ---
 
+## 🌐 Production Deployment Guide (100% Free Forever)
+
+This project is architected for zero-cost production deployment using **Render** (Backend API), **Vercel** (Frontend), and **Neon.tech** (Cloud Database).
+
+```
+┌─────────────────────────────────┐       ┌─────────────────────────────────┐
+│     Frontend (Vercel)           │ ───►  │     Backend API (Render.com)    │
+│  https://rakibulhr.dev          │       │  https://rakibulhr-api.onrender │
+└─────────────────────────────────┘       └────────────────┬────────────────┘
+                                                           │
+                                                           ▼
+                                          ┌─────────────────────────────────┐
+                                          │  Neon.tech PostgreSQL (Active)  │
+                                          └─────────────────────────────────┘
+```
+
+### 1. Backend Deployment on Render.com
+1. Sign in to [Render.com](https://render.com) with GitHub.
+2. Click **New +** → **Web Service**.
+3. Select the repository `Rakibul66/RakibulHR`.
+4. Configure with these settings:
+   - **Branch**: `2.0` *(or `main` if merged)*
+   - **Root Directory**: `server`
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install && npx prisma generate && npm run build`
+   - **Start Command**: `npm run start:prod`
+5. Under **Environment Variables**, add:
+   - `DATABASE_URL`: `postgresql://neondb_owner:npg_0BYbJivoKu4N@ep-weathered-surf-azl49bdw-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require`
+   - `JWT_SECRET`: `super-secret-jwt-key-rakibulhr-portfolio-2026`
+   - `PORT`: `4000`
+   - `ADMIN_EMAIL`: `admin@rakibulhr.dev`
+   - `ADMIN_PASSWORD`: `admin_secure_password_123`
+6. Click **Deploy Web Service**. You will receive your public API endpoint:
+   `https://rakibulhr-api.onrender.com`
+
+### 2. Frontend Deployment on Vercel
+1. Open your project on [Vercel](https://vercel.com).
+2. Go to **Settings** → **Environment Variables**.
+3. Add:
+   - **Key**: `VITE_API_URL`
+   - **Value**: `https://rakibulhr-api.onrender.com` *(your Render API URL)*
+4. Redeploy. Your SPA routing is pre-configured via `vercel.json` to handle all direct page links (`/projects`, `/ventures`, `/blog`, `/contact`, `/admin`).
+
+---
+
 ## 🔍 SEO & Web Quality
 
 - **Meta Tags**: Optimized Open Graph, Twitter Cards, Google indexing directives, canonical tags, and mobile viewport configuration in `index.html`.
