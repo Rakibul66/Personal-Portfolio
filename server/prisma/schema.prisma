@@ -1,0 +1,145 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProfileConfig {
+  id          String   @id @default("default")
+  name        String   @default("MD. Rakibul Hasan")
+  title       String   @default("Flutter & Native Android Expert")
+  headline    String   @default("Building scalable mobile ecosystems and premium digital products.")
+  bio         String   @default("")
+  avatarUrl   String?
+  resumeUrl   String?
+  githubUrl   String?  @default("https://github.com/Rakibul-Hasan-Roxy")
+  linkedinUrl String?  @default("https://linkedin.com/in/rakibul-hasan-roxy")
+  facebookUrl String?
+  twitterUrl  String?
+  email       String?  @default("contact@rakibulhr.dev")
+  phone       String?
+  location    String?  @default("Dhaka, Bangladesh")
+  hobbies     String[] @default([])
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  title        String
+  subtitle     String?
+  description  String
+  technologies String[]
+  category     String   @default("Mobile Application")
+  imageUrl     String?  // Cover image / screenshot URL
+  images       String[] @default([]) // Optional multiple screenshots / gallery
+  githubUrl    String?
+  liveUrl      String?
+  playStoreUrl String?
+  appStoreUrl  String?
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model InHouseVentures {
+  id          String   @id @default(uuid())
+  title       String   // e.g. "Bponi Technologies", "SaaS Scripts", "ThemeForest Portfolio"
+  tagline     String?  // e.g. "Digital Asset Marketplace"
+  description String
+  category    String   @default("In-House Venture") // "Venture", "Passive Income", "Product", "Micro-SaaS"
+  imageUrl    String?  // Optional cover / logo
+  linkUrl     String   // Destination link
+  linkText    String   @default("Visit Venture")
+  status      String   @default("ACTIVE") // "ACTIVE", "BETA", "LAUNCHING"
+  revenue     String?  // Optional stats e.g. "$2k/mo", "500+ Clients"
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  tags        String[]
+  published   Boolean  @default(true)
+  readingTime String?  @default("5 min read")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id           String   @id @default(uuid())
+  role         String
+  company      String
+  location     String?
+  period       String
+  details      String[]
+  type         String   @default("EXPERIENCE") // "EXPERIENCE" (Company/Work), "EDUCATION", or "FREELANCE"
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Reference {
+  id          String   @id @default(uuid())
+  name        String
+  role        String
+  company     String
+  email       String?
+  phone       String?
+  feedback    String?
+  avatarUrl   String?  // Client photo/avatar
+  rating      Int      @default(5)
+  videoUrl    String?  // YouTube embed/link or uploaded mp4 file URL
+  videoType   String?  @default("YOUTUBE") // "YOUTUBE", "DEVICE", or "NONE"
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model ShowcaseVideo {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  youtubeUrl  String?  // YouTube link or video ID
+  videoFile   String?  // Uploaded MP4 file from device
+  thumbnail   String?  // Cover image / thumbnail
+  category    String?  @default("Demo")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id        String   @id @default(uuid())
+  name      String
+  category  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
