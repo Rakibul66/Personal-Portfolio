@@ -57,9 +57,13 @@ export class UploadController {
     try {
       // Determine Cloudinary resource type
       let resourceType: 'image' | 'video' | 'raw' | 'auto' = 'auto';
+      const ext = extname(file.originalname).toLowerCase();
       if (file.mimetype.startsWith('video/')) {
         resourceType = 'video';
       } else if (
+        ext === '.pdf' ||
+        ext === '.doc' ||
+        ext === '.docx' ||
         file.mimetype.includes('pdf') ||
         file.mimetype.includes('word') ||
         file.mimetype.includes('document')
