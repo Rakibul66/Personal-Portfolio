@@ -6,21 +6,8 @@ export class ProfileService {
   constructor(private prisma: PrismaService) {}
 
   async getProfile() {
-    let profile = await this.prisma.profileConfig.findUnique({ where: { id: 'default' } });
-    if (!profile) {
-      profile = await this.prisma.profileConfig.create({
-        data: {
-          id: 'default',
-          name: 'MD. Rakibul Hasan',
-          title: 'Flutter & Native Android Expert',
-          headline: 'Engineering scalable mobile ecosystems and premium digital products.',
-          githubUrl: 'https://github.com/Rakibul-Hasan-Roxy',
-          linkedinUrl: 'https://linkedin.com/in/rakibul-hasan-roxy',
-          email: 'contact@rakibulhr.dev',
-          hobbies: ['Open Source', 'Tech Blogging', 'UI Prototyping', 'Traveling'],
-        },
-      });
-    }
+    // Return the database profile config or null if admin hasn't created one yet
+    const profile = await this.prisma.profileConfig.findUnique({ where: { id: 'default' } });
     return profile;
   }
 

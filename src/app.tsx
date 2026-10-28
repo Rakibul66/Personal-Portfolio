@@ -149,7 +149,7 @@ export default function App() {
     <div className="relative min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
       <GlobalSyncIndicator isSyncing={isSyncing} />
       <ParticleField />
-      <Header brandName={liveProfile?.name || "RAKIBUL.H"} profile={liveProfile} />
+      <Header brandName={liveProfile?.name} profile={liveProfile} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-28 pb-16 space-y-16 md:space-y-24">
         {/* Modern Professional Hero Section - Displays only what's configured in Admin Studio */}
