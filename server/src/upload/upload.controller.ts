@@ -47,9 +47,12 @@ export class UploadController {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
-    const host = req.get('host');
-    const protocol = req.protocol;
-    const fileUrl = `${protocol}://${host}/uploads/${file.filename}`;
+    // Check if an external host or standard host is provided via environment or request header
+    const forwardProto = req.headers['x-forwarded-proto'];
+    const protocol = (typeof forwardProto === 'string' ? forwardProto.split(',')[0].trim() : req.protocol) || 'https';
+    const host = req.headers['x-forwarded-host'] || req.get('host');
+    const baseUrl = process.env.PUBLIC_API_URL || `${protocol}://${host}`;
+    const fileUrl = `${baseUrl.replace(/\/$/, '')}/uploads/${file.filename}`;
     return {
       url: fileUrl,
       filename: file.filename,
