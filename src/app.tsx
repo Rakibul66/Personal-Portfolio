@@ -5,10 +5,11 @@ import * as Data from "./data/portfolioData";
 import ParticleField from "./components/ParticleField";
 import Header from "./components/sections/Header";
 import HeroSection from "./components/sections/HeroSection";
+import DeveloperIntroSection from "./components/sections/DeveloperIntroSection";
 import AcademicAndExperienceSection from "./components/sections/AcademicAndExperienceSection";
 import SelectedWorks from "./components/sections/SelectedWorks";
 import InHouseVenturesSection from "./components/sections/InHouseVenturesSection";
-import FullWidthVideoSection from "./components/sections/FullWidthVideoSection";
+import ShowcaseGridSection from "./components/sections/ShowcaseGridSection";
 import ClientReviewsSection from "./components/sections/ClientReviewsSection";
 import CleanFooter from "./components/sections/CleanFooter";
 import BlogSection from "./components/sections/BlogSection";
@@ -143,6 +144,25 @@ export default function App() {
     });
   }, []);
 
+  // Separate videos categorized as "Intro" or "Speech" vs "Project Showcase / Demos"
+  const introVideos = liveShowcases.filter(
+    (v) =>
+      v.category?.toLowerCase().includes("intro") ||
+      v.category?.toLowerCase().includes("speech") ||
+      v.title.toLowerCase().includes("intro") ||
+      v.title.toLowerCase().includes("speech")
+  );
+
+  const demoVideos = liveShowcases.filter(
+    (v) => !introVideos.includes(v)
+  );
+
+  // Fallback: If no video is explicitly tagged with intro, use the first as intro if present
+  const displayIntroVideos =
+    introVideos.length > 0 ? introVideos : liveShowcases.slice(0, 1);
+  const displayDemoVideos =
+    introVideos.length > 0 ? demoVideos : liveShowcases.slice(1);
+
   return (
     <div className="relative min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
       <GlobalSyncIndicator isSyncing={isSyncing} />
@@ -158,11 +178,18 @@ export default function App() {
           />
         )}
 
+        {/* Developer Intro Video Section: Full-width if 1 video, slider with dots if multiple */}
+        {displayIntroVideos.length > 0 && (
+          <DeveloperIntroSection videos={displayIntroVideos} />
+        )}
+
         {/* Selected Works - Displays projects added via Admin Studio */}
         <SelectedWorks projects={liveProjects} />
 
-        {/* Full Width Video Section - Plays directly in page if video/YouTube input provided in Admin Studio */}
-        {liveShowcases.length > 0 && <FullWidthVideoSection videos={liveShowcases} />}
+        {/* Project Video Demos - Displays in a Grid */}
+        {displayDemoVideos.length > 0 && (
+          <ShowcaseGridSection videos={displayDemoVideos} />
+        )}
 
         {/* Professional Experience & Education - Displays items added via Admin Studio */}
         <AcademicAndExperienceSection liveExperiences={liveExperiences} />
