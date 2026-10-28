@@ -21,7 +21,6 @@ export default function CleanFooter({ profile }: CleanFooterProps) {
             <Link to="/ventures" className="hover:text-cyan-500 transition-colors">Ventures</Link>
             <Link to="/blog" className="hover:text-cyan-500 transition-colors">Articles</Link>
             <Link to="/contact" className="hover:text-cyan-500 transition-colors">Contact</Link>
-            <Link to="/admin" className="text-cyan-600 dark:text-cyan-400 font-semibold hover:underline">Admin Studio</Link>
           </div>
         </div>
       </footer>
@@ -93,7 +92,6 @@ export default function CleanFooter({ profile }: CleanFooterProps) {
             <Link to="/ventures" className="hover:text-cyan-500 transition-colors">Ventures</Link>
             <Link to="/blog" className="hover:text-cyan-500 transition-colors">Articles</Link>
             <Link to="/contact" className="hover:text-cyan-500 transition-colors">Contact</Link>
-            <Link to="/admin" className="text-cyan-600 dark:text-cyan-400 font-semibold hover:underline">Admin Studio</Link>
           </div>
         </div>
       </div>
