@@ -36,10 +36,10 @@ export default function Header({ brandName, profile }: HeaderProps) {
   const displayName = profile?.name || brandName || "";
 
   return (
-    <header className="fixed top-0 w-full z-50 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4">
-        <div className="rounded-[22px] border border-slate-200/80 dark:border-white/10 px-5 sm:px-6 py-3 flex justify-between items-center backdrop-blur-2xl bg-white/80 dark:bg-slate-950/80 shadow-lg dark:shadow-2xl">
-          {/* Logo Brand with avatar thumbnail - only if avatar or name provided by admin */}
+    <header className="fixed top-0 left-0 w-full z-50 transition-colors backdrop-blur-xl bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/80 dark:border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="h-16 sm:h-20 flex justify-between items-center">
+          {/* Logo Brand with avatar thumbnail - seamlessly on header background */}
           <Link to="/" className="display-title text-base sm:text-lg font-black tracking-tight uppercase flex items-center gap-2.5 group">
             {profile?.avatarUrl && (
               <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/30 ring-2 ring-cyan-500/20 group-hover:ring-cyan-500/50 transition-all">
@@ -57,7 +57,7 @@ export default function Header({ brandName, profile }: HeaderProps) {
             ) : null}
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - seamless on background */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full px-2.5 py-1 backdrop-blur-md">
             {navLinks.map((item) => {
               const isActive = location.pathname === item.path;
@@ -114,7 +114,7 @@ export default function Header({ brandName, profile }: HeaderProps) {
         </div>
 
         {/* Mobile Navigation Bar */}
-        <div className="flex md:hidden justify-center gap-1 mt-2 bg-white/90 dark:bg-slate-950/90 border border-slate-200 dark:border-white/10 rounded-2xl p-1.5 backdrop-blur-xl shadow-md">
+        <div className="flex md:hidden justify-center gap-1 pb-3 pt-1 border-t border-slate-200/60 dark:border-white/5">
           {navLinks.map((item) => {
             const isActive = location.pathname === item.path;
             return (
