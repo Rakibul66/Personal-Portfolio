@@ -15,13 +15,15 @@ import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
 import { apiService, ProjectData, ProfileData, resolveMediaUrl } from "../services/api";
+import { initialProjectsData, initialProfileData } from "../data/initialFallbackData";
+import { SectionSkeleton } from "../components/ui/Loaders";
 
 const ITEMS_PER_PAGE = 6;
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<ProjectData[]>(initialProjectsData);
+  const [profile, setProfile] = useState<ProfileData>(initialProfileData);
+  const [loading, setLoading] = useState(false);
 
   // Filters & State
   const [search, setSearch] = useState("");

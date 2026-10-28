@@ -26,6 +26,13 @@ import {
   ShowcaseVideoData,
   ReferenceData,
 } from "./services/api";
+import {
+  initialProfileData,
+  initialProjectsData,
+  initialShowcasesData,
+  initialReviewsData,
+} from "./data/initialFallbackData";
+import { GlobalSyncIndicator } from "./components/ui/Loaders";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -173,29 +180,41 @@ export default function App() {
   const [experienceTab, setExperienceTab] = useState<"office" | "freelance">("office");
   const [isHireDialogOpen, setIsHireDialogOpen] = useState(false);
 
-  // Dynamic Live Database States
-  const [liveProjects, setLiveProjects] = useState<ProjectData[]>([]);
+  // Dynamic Live Database States initialized with high-speed instant fallback data
+  const [liveProjects, setLiveProjects] = useState<ProjectData[]>(initialProjectsData);
   const [liveExperiences, setLiveExperiences] = useState<ExperienceData[]>([]);
-  const [liveProfile, setLiveProfile] = useState<ProfileData | null>(null);
-  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>([]);
-  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>([]);
+  const [liveProfile, setLiveProfile] = useState<ProfileData>(initialProfileData);
+  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>(initialShowcasesData);
+  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>(initialReviewsData);
+  const [isSyncing, setIsSyncing] = useState<boolean>(true);
 
   useEffect(() => {
-    // Fetch live projects, experience, showcase videos, reviews, and profile directly from PostgreSQL
+    let completed = 0;
+    const checkDone = () => {
+      completed++;
+      if (completed >= 5) setIsSyncing(false);
+    };
+
+    // Parallel background fetch from cloud PostgreSQL with automatic cache resolution
     apiService.getProjects().then((data) => {
       if (data && data.length > 0) setLiveProjects(data);
+      checkDone();
     });
     apiService.getExperiences().then((data) => {
       if (data && data.length > 0) setLiveExperiences(data);
+      checkDone();
     });
     apiService.getProfile().then((data) => {
       if (data) setLiveProfile(data);
+      checkDone();
     });
     apiService.getShowcase().then((data) => {
       if (data && data.length > 0) setLiveShowcases(data);
+      checkDone();
     });
     apiService.getReferences().then((data) => {
       if (data && data.length > 0) setLiveReviews(data);
+      checkDone();
     });
   }, []);
 
@@ -210,6 +229,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
+      <GlobalSyncIndicator isSyncing={isSyncing} />
       <ParticleField />
       <Header brandName={liveProfile?.name || Data.portfolioConfig.name} profile={liveProfile} />
 

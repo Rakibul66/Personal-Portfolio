@@ -15,13 +15,14 @@ import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
 import { apiService, VentureData, ProfileData } from "../services/api";
+import { initialVenturesData, initialProfileData } from "../data/initialFallbackData";
 
 const VENTURES_PER_PAGE = 6;
 
 export default function VenturesPage() {
-  const [ventures, setVentures] = useState<VentureData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [ventures, setVentures] = useState<VentureData[]>(initialVenturesData);
+  const [profile, setProfile] = useState<ProfileData>(initialProfileData);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
