@@ -1,13 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Briefcase, ExternalLink, MapPin, X } from "lucide-react";
-import { Link } from "react-router-dom";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/effect-coverflow";
-
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ExternalLink, X } from "lucide-react";
 import * as Data from "./data/portfolioData";
 import ParticleField from "./components/ParticleField";
 import Header from "./components/sections/Header";
@@ -17,7 +10,6 @@ import SelectedWorks from "./components/sections/SelectedWorks";
 import InHouseVenturesSection from "./components/sections/InHouseVenturesSection";
 import ShowcaseSection from "./components/sections/ShowcaseSection";
 import ClientReviewsSection from "./components/sections/ClientReviewsSection";
-import VideoSection from "./components/sections/VideoSection";
 import VideoIntroModal from "./components/sections/VideoIntroModal";
 import CleanFooter from "./components/sections/CleanFooter";
 import BlogSection from "./components/sections/BlogSection";
@@ -29,12 +21,6 @@ import {
   ShowcaseVideoData,
   ReferenceData,
 } from "./services/api";
-import {
-  initialProfileData,
-  initialProjectsData,
-  initialShowcasesData,
-  initialReviewsData,
-} from "./data/initialFallbackData";
 import { GlobalSyncIndicator } from "./components/ui/Loaders";
 
 type HireDialogProps = {
@@ -121,12 +107,12 @@ export default function App() {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isHireDialogOpen, setIsHireDialogOpen] = useState(false);
 
-  // Dynamic Live Database States initialized with high-speed instant fallback data
-  const [liveProjects, setLiveProjects] = useState<ProjectData[]>(initialProjectsData);
+  // Dynamic Live Database States - pure database driven (no hardcoded seed data)
+  const [liveProjects, setLiveProjects] = useState<ProjectData[]>([]);
   const [liveExperiences, setLiveExperiences] = useState<ExperienceData[]>([]);
-  const [liveProfile, setLiveProfile] = useState<ProfileData>(initialProfileData);
-  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>(initialShowcasesData);
-  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>(initialReviewsData);
+  const [liveProfile, setLiveProfile] = useState<ProfileData | null>(null);
+  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>([]);
+  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>([]);
   const [isSyncing, setIsSyncing] = useState<boolean>(true);
 
   useEffect(() => {
@@ -138,11 +124,11 @@ export default function App() {
 
     // Parallel background fetch from cloud PostgreSQL with automatic cache resolution
     apiService.getProjects().then((data) => {
-      if (data && data.length > 0) setLiveProjects(data);
+      if (data && Array.isArray(data)) setLiveProjects(data);
       checkDone();
     });
     apiService.getExperiences().then((data) => {
-      if (data && data.length > 0) setLiveExperiences(data);
+      if (data && Array.isArray(data)) setLiveExperiences(data);
       checkDone();
     });
     apiService.getProfile().then((data) => {
@@ -150,11 +136,11 @@ export default function App() {
       checkDone();
     });
     apiService.getShowcase().then((data) => {
-      if (data && data.length > 0) setLiveShowcases(data);
+      if (data && Array.isArray(data)) setLiveShowcases(data);
       checkDone();
     });
     apiService.getReferences().then((data) => {
-      if (data && data.length > 0) setLiveReviews(data);
+      if (data && Array.isArray(data)) setLiveReviews(data);
       checkDone();
     });
   }, []);
@@ -163,36 +149,35 @@ export default function App() {
     <div className="relative min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
       <GlobalSyncIndicator isSyncing={isSyncing} />
       <ParticleField />
-      <Header brandName={liveProfile?.name || Data.portfolioConfig.name} profile={liveProfile} />
+      <Header brandName={liveProfile?.name || "RAKIBUL.H"} profile={liveProfile} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-28 pb-16 space-y-16 md:space-y-24">
-        {/* Modern Professional Hero Section with Self Image, CV CTA, and Live Visitors */}
-        <HeroSection
-          profile={liveProfile}
-          onOpenVideo={() => setIsVideoModalOpen(true)}
-          onOpenHireDialog={() => setIsHireDialogOpen(true)}
-        />
-
-        {/* Dynamic PostgreSQL Selected Works Section */}
-        <SelectedWorks projects={liveProjects} />
-
-        {/* Professional Experience, Academic Journey & Travel Grants (matching user uploaded designs) */}
-        <AcademicAndExperienceSection liveExperiences={liveExperiences} />
-
-        {/* Dynamic In-House Ventures & Income Sites Section */}
-        <InHouseVenturesSection />
-
-        {/* Dynamic Project Showcase (Launch Archive) Section from PostgreSQL */}
-        {liveShowcases.length > 0 ? (
-          <ShowcaseSection videos={liveShowcases} />
-        ) : (
-          <VideoSection videos={Data.videos} onOpenVideo={() => setIsVideoModalOpen(true)} />
+        {/* Modern Professional Hero Section - Displays only what's configured in Admin Studio */}
+        {liveProfile && (
+          <HeroSection
+            profile={liveProfile}
+            hasVideo={liveShowcases.length > 0}
+            onOpenVideo={() => setIsVideoModalOpen(true)}
+            onOpenHireDialog={() => setIsHireDialogOpen(true)}
+          />
         )}
 
-        {/* Dynamic Client Reviews & Testimonials Section */}
-        <ClientReviewsSection reviews={liveReviews} />
+        {/* Selected Works - Displays only projects added via Admin Studio */}
+        <SelectedWorks projects={liveProjects} />
 
-        {/* Dynamic Tech Blog Section */}
+        {/* Professional Experience & Education - Displays only items added via Admin Studio */}
+        <AcademicAndExperienceSection liveExperiences={liveExperiences} />
+
+        {/* In-House Ventures - Displays only ventures added via Admin Studio */}
+        <InHouseVenturesSection />
+
+        {/* Launch Archive & Video Demos - Displays only showcase videos added via Admin Studio */}
+        {liveShowcases.length > 0 && <ShowcaseSection videos={liveShowcases} />}
+
+        {/* Client Reviews - Displays only reviews added via Admin Studio */}
+        {liveReviews.length > 0 && <ClientReviewsSection reviews={liveReviews} />}
+
+        {/* Technical Blog - Displays only articles added via Admin Studio */}
         <BlogSection />
       </main>
 
@@ -200,12 +185,14 @@ export default function App() {
       <CleanFooter profile={liveProfile} />
 
       {/* Dedicated Video Introduction Modal */}
-      <VideoIntroModal
-        isOpen={isVideoModalOpen}
-        onClose={() => setIsVideoModalOpen(false)}
-        videoUrl={liveShowcases[0]?.youtubeUrl || "https://www.youtube.com/watch?v=AgC_Wq7aWYU"}
-        name={liveProfile?.name}
-      />
+      {liveShowcases.length > 0 && (
+        <VideoIntroModal
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          videoUrl={liveShowcases[0]?.youtubeUrl || liveShowcases[0]?.videoFile}
+          name={liveProfile?.name}
+        />
+      )}
 
       {/* Direct Collaboration Modal */}
       <HireDialog open={isHireDialogOpen} onClose={() => setIsHireDialogOpen(false)} />
