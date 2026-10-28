@@ -11,28 +11,31 @@ A modern, high-performance personal portfolio, digital asset marketplace, and re
   - **In-House Ventures & Income Sites**: Showcase of proprietary micro-SaaS platforms, developer kits, and revenue metrics.
   - **Launch Archive & Video Showcase**: Interactive carousel supporting YouTube embeds and uploaded HTML5 video playback (`.mp4`, `.webm`).
   - **Client Reviews & Testimonials**: Verified client reviews featuring 5-star ratings, quotes, company associations, and attached video reviews (with automatic YouTube Shorts / standard watch URL parsing).
-  - **Technical Articles & Insights**: Engineering blog articles with tag filtering and reading modals.
+  - **Technical Articles & Insights**: Engineering blog articles with tag filtering and dedicated article reader pages.
   - **Multi-Page Catalog Routes**:
-    - `/` — Homepage with streamlined, minimal section headers.
+    - `/` — Homepage with hero, selected works, intro video / showcase, ventures, verified reviews, and real visitor counter.
     - `/projects` — Archive with search, category filtering, 3 display themes (Grid, Cinematic Showcase, Minimal List), and pagination.
+    - `/projects/:id` — Dedicated full-page project details route with live preview, deep breakdown, technologies, and related works.
     - `/ventures` — Independent digital asset portfolio.
-    - `/blog` — Technical publications catalog.
+    - `/blog` — Technical publications catalog with tag filtering.
+    - `/blog/:slug` — Dedicated full-page article reader.
     - `/contact` — Direct message proposals with automatic database persistence.
 
 - **Admin Control Studio (`/admin`)**:
   - Secure JWT authentication (`admin@rakibulhr.dev`).
   - **List-First UX**: Clean data tables displayed first with edit/delete actions, search filters, and top "+ Add" buttons that open dedicated forms.
-  - **Device Media Uploads**: Built-in Multer upload pipeline supporting images and video files up to 100MB directly from device file pickers.
-  - Full management of Projects, In-House Ventures, Showcase Videos, Client Reviews, Articles, Companies, Education, and Bio Links.
+  - **Cloud Media Pipeline (Cloudinary)**: Uploaded images, developer intro videos, demo clips, and CV documents (PDF/DOCX) stream directly to Cloudinary CDN with permanent HTTPS URLs.
+  - Full management of Projects, In-House Ventures, Showcase & Intro Videos, Client Reviews, Articles, Companies, Education, Bio Links, and CV Upload.
+  - Real-time visitor tracking and analytics.
 
 ---
 
 ## 🛠️ Architecture & Tech Stack
 
 - **Frontend**: React 18, TypeScript, Vite 5, Tailwind CSS, Framer Motion, Lucide Icons, Swiper
-- **Backend API**: NestJS 10, TypeScript, Prisma ORM 5, Passport JWT, Multer
+- **Backend API**: NestJS 10, TypeScript, Prisma ORM 5, Passport JWT, Multer Memory Storage
 - **Database**: PostgreSQL (Hosted on **Neon.tech** cloud)
-- **File Storage**: Static asset pipeline serving uploaded media via `/uploads`
+- **Cloud Storage & CDN**: **Cloudinary** for permanent media (images, videos, CV files)
 
 ---
 
