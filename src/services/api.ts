@@ -4,7 +4,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export function resolveMediaUrl(url?: string | null): string {
   if (!url) return '';
-  // Force HTTPS if URL was generated with http
   let cleanUrl = url;
   if (cleanUrl.startsWith('http://rakibulhr.onrender.com')) {
     cleanUrl = cleanUrl.replace('http://', 'https://');
@@ -14,6 +13,18 @@ export function resolveMediaUrl(url?: string | null): string {
     return cleanUrl.replace('http://localhost:4000', API_BASE_URL);
   }
   return cleanUrl;
+}
+
+export function getDownloadableCvUrl(url?: string | null): string {
+  if (!url) return '';
+  let clean = resolveMediaUrl(url);
+  // If it's a Cloudinary raw upload missing an extension in the path, tell Cloudinary to attach attachment flag
+  if (clean.includes('cloudinary.com') && clean.includes('/raw/upload/')) {
+    if (!clean.endsWith('.pdf')) {
+      clean = clean.replace('/raw/upload/', '/raw/upload/fl_attachment:Rakibul_Hasan_CV.pdf/');
+    }
+  }
+  return clean;
 }
 
 export interface ProjectData {
