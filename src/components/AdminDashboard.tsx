@@ -297,6 +297,23 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
 
   const [newHobbyInput, setNewHobbyInput] = useState("");
 
+  // Upload Progress & Modal Feedback States
+  const [cvUploading, setCvUploading] = useState(false);
+  const [cvProgress, setCvProgress] = useState(0);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoProgress, setPhotoProgress] = useState(0);
+
+  // Success Dialog State
+  const [successDialog, setSuccessDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+  }>({
+    open: false,
+    title: "",
+    message: "",
+  });
+
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3500);
@@ -782,6 +799,11 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
     setLoading(true);
     try {
       await apiService.updateProfile(token, profile);
+      setSuccessDialog({
+        open: true,
+        title: "Saved Successfully!",
+        message: "Your profile information, bio, CV, and social links have been updated and are live.",
+      });
       showToast("Profile & Links saved");
     } catch (err: any) {
       alert("Error: " + err.message);
@@ -2906,6 +2928,25 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                     )}
                   </div>
 
+                  {/* Animated Progress Bar during upload */}
+                  {cvUploading && (
+                    <div className="space-y-1.5 p-3 rounded-xl bg-slate-900/90 border border-cyan-500/30">
+                      <div className="flex items-center justify-between text-xs font-mono text-cyan-300">
+                        <span className="flex items-center gap-1.5">
+                          <Loader2 size={13} className="animate-spin text-cyan-400" />
+                          Uploading CV to Cloudinary...
+                        </span>
+                        <span className="font-bold">{cvProgress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-gradient-to-r from-cyan-500 to-emerald-400 h-2 rounded-full transition-all duration-200"
+                          style={{ width: `${cvProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="text"
@@ -2914,21 +2955,40 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                       onChange={(e) => setProfile({ ...profile, resumeUrl: e.target.value })}
                       className="flex-1 bg-black/40 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
                     />
-                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0">
-                      <Upload size={14} />
-                      <span>Upload CV (PDF)</span>
+                    <label className={`cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0 ${cvUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {cvUploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                      <span>{cvUploading ? "Uploading..." : "Upload CV (PDF)"}</span>
                       <input
                         type="file"
                         accept=".pdf,.doc,.docx"
                         className="hidden"
+                        disabled={cvUploading}
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (!file || !token) return;
+                          setCvUploading(true);
+                          setCvProgress(15);
+                          const progressTimer = setInterval(() => {
+                            setCvProgress((prev) => (prev < 90 ? prev + 12 : prev));
+                          }, 180);
                           try {
                             const res = await apiService.uploadFile(token, file);
+                            clearInterval(progressTimer);
+                            setCvProgress(100);
                             setProfile((prev) => ({ ...prev, resumeUrl: res.url }));
-                            showToast("CV uploaded successfully!");
+                            setTimeout(() => {
+                              setCvUploading(false);
+                              setCvProgress(0);
+                              setSuccessDialog({
+                                open: true,
+                                title: "Upload Complete!",
+                                message: "Your CV document has been successfully uploaded to cloud storage and linked to your profile.",
+                              });
+                            }, 400);
                           } catch (err: any) {
+                            clearInterval(progressTimer);
+                            setCvUploading(false);
+                            setCvProgress(0);
                             alert("CV Upload Failed: " + err.message);
                           }
                         }}
@@ -2953,6 +3013,25 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                     )}
                   </div>
 
+                  {/* Animated Progress Bar during upload */}
+                  {photoUploading && (
+                    <div className="space-y-1.5 p-3 rounded-xl bg-slate-900/90 border border-cyan-500/30">
+                      <div className="flex items-center justify-between text-xs font-mono text-cyan-300">
+                        <span className="flex items-center gap-1.5">
+                          <Loader2 size={13} className="animate-spin text-cyan-400" />
+                          Uploading image to Cloudinary...
+                        </span>
+                        <span className="font-bold">{photoProgress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-gradient-to-r from-cyan-500 to-indigo-400 h-2 rounded-full transition-all duration-200"
+                          style={{ width: `${photoProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex flex-col sm:flex-row gap-3">
                     <input
                       type="text"
@@ -2961,21 +3040,40 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                       onChange={(e) => setProfile({ ...profile, avatarUrl: e.target.value })}
                       className="flex-1 bg-black/40 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
                     />
-                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0">
-                      <Upload size={14} />
-                      <span>Upload Photo</span>
+                    <label className={`cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0 ${photoUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {photoUploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                      <span>{photoUploading ? "Uploading..." : "Upload Photo"}</span>
                       <input
                         type="file"
                         accept="image/*"
                         className="hidden"
+                        disabled={photoUploading}
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (!file || !token) return;
+                          setPhotoUploading(true);
+                          setPhotoProgress(15);
+                          const progressTimer = setInterval(() => {
+                            setPhotoProgress((prev) => (prev < 90 ? prev + 12 : prev));
+                          }, 180);
                           try {
                             const res = await apiService.uploadFile(token, file);
+                            clearInterval(progressTimer);
+                            setPhotoProgress(100);
                             setProfile((prev) => ({ ...prev, avatarUrl: res.url }));
-                            showToast("Photo uploaded successfully!");
+                            setTimeout(() => {
+                              setPhotoUploading(false);
+                              setPhotoProgress(0);
+                              setSuccessDialog({
+                                open: true,
+                                title: "Upload Complete!",
+                                message: "Your profile photo has been successfully uploaded to Cloudinary.",
+                              });
+                            }, 400);
                           } catch (err: any) {
+                            clearInterval(progressTimer);
+                            setPhotoUploading(false);
+                            setPhotoProgress(0);
                             alert("Photo Upload Failed: " + err.message);
                           }
                         }}
@@ -3034,6 +3132,30 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
           )}
         </main>
       </div>
+
+      {/* Modern Feedback Dialog (Upload Complete & Saved Successfully) */}
+      {successDialog.open && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-[#0f172a] border border-cyan-500/40 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
+              <CheckCircle2 size={28} />
+            </div>
+            <div>
+              <h4 className="text-xl font-black text-white">{successDialog.title}</h4>
+              <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                {successDialog.message}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSuccessDialog({ open: false, title: "", message: "" })}
+              className="w-full py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-xs transition-all shadow-md shadow-cyan-400/20"
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
