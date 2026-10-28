@@ -52,6 +52,10 @@ model Project {
   order        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([category])
+  @@index([featured, order])
 }
 
 model InHouseVentures {
@@ -68,6 +72,8 @@ model InHouseVentures {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
 }
 
 model Blog {
@@ -82,6 +88,9 @@ model Blog {
   readingTime String?  @default("5 min read")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([published])
 }
 
 model Experience {
@@ -95,6 +104,8 @@ model Experience {
   order        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@index([type, order])
 }
 
 model Reference {
@@ -111,6 +122,8 @@ model Reference {
   videoType   String?  @default("YOUTUBE") // "YOUTUBE", "DEVICE", or "NONE"
   order       Int      @default(0)
   createdAt   DateTime @default(now())
+
+  @@index([order, createdAt(sort: Desc)])
 }
 
 model ShowcaseVideo {
@@ -124,6 +137,8 @@ model ShowcaseVideo {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([order, createdAt(sort: Desc)])
 }
 
 model Skill {
@@ -142,4 +157,6 @@ model Message {
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
 }
