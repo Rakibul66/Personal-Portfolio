@@ -193,6 +193,18 @@ export const apiService = {
     return cached && cached.length > 0 ? cached : [];
   },
 
+  async getBlogBySlug(slug: string): Promise<BlogData | null> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/blogs/${slug}`);
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {}
+    // Fallback search through getBlogs if direct slug fails
+    const all = await this.getBlogs();
+    return all.find((b) => b.slug === slug || b.id === slug) || null;
+  },
+
   async getExperiences(type?: string): Promise<ExperienceData[]> {
     const cacheKey = `experiences_${type || 'all'}`;
     const cached = getCached<ExperienceData[]>(cacheKey);

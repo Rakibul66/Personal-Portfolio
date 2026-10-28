@@ -5,6 +5,7 @@ import App from "./app";
 import AdminDashboard from "./components/AdminDashboard";
 import ProjectsPage from "./pages/ProjectsPage";
 import BlogPage from "./pages/BlogPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 import VenturesPage from "./pages/VenturesPage";
 import ContactPage from "./pages/ContactPage";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/ventures" element={<VenturesPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<ArticleDetailPage />} />
           <Route path="/contact" element={<ContactPage />} />
 
           {/* Dedicated Admin Dashboard Route: http://localhost:5173/admin */}

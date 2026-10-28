@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   BookOpen,
   Calendar,
   Clock,
   ArrowRight,
   Search,
-  Tag,
-  X,
-  Share2,
 } from "lucide-react";
 import Header from "../components/sections/Header";
 import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
-import { apiService, BlogData, ProfileData } from "../services/api";
+import { apiService, BlogData, ProfileData, resolveMediaUrl } from "../services/api";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -25,7 +23,6 @@ export default function BlogPage() {
   // Search & Filter
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState("All");
-  const [activeBlog, setActiveBlog] = useState<BlogData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -141,16 +138,16 @@ export default function BlogPage() {
         {!loading && filteredBlogs.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedBlogs.map((blog) => (
-              <article
-                key={blog.id || blog.title}
-                onClick={() => setActiveBlog(blog)}
-                className="group cursor-pointer rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/50 overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-cyan-500/50 hover:-translate-y-1.5 shadow-lg dark:shadow-2xl flex flex-col justify-between"
+              <Link
+                key={blog.id || blog.slug}
+                to={`/blog/${blog.slug || blog.id}`}
+                className="group rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/50 overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-cyan-500/50 hover:-translate-y-1.5 shadow-lg dark:shadow-2xl flex flex-col justify-between"
               >
                 <div>
                   {blog.coverImage && (
                     <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-white/10">
                       <img
-                        src={blog.coverImage}
+                        src={resolveMediaUrl(blog.coverImage)}
                         alt={blog.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -159,6 +156,10 @@ export default function BlogPage() {
 
                   <div className="p-6 space-y-3">
                     <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={12} className="text-cyan-500" />
+                        {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : "Recent"}
+                      </span>
                       {blog.readingTime && (
                         <span className="flex items-center gap-1">
                           <Clock size={12} className="text-cyan-500" />
@@ -190,10 +191,10 @@ export default function BlogPage() {
                 </div>
 
                 <div className="p-6 pt-0 flex items-center justify-between text-xs font-bold text-cyan-600 dark:text-cyan-400">
-                  <span>Read Article</span>
+                  <span>Read Full Article</span>
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}
@@ -207,47 +208,6 @@ export default function BlogPage() {
           />
         )}
       </main>
-
-      {/* Reader Modal */}
-      {activeBlog && (
-        <div
-          className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-2xl overflow-y-auto"
-          onClick={() => setActiveBlog(null)}
-        >
-          <div
-            className="relative w-full max-w-3xl my-8 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setActiveBlog(null)}
-              className="absolute right-4 top-4 p-2 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white"
-            >
-              <X size={18} />
-            </button>
-
-            {activeBlog.coverImage && (
-              <img
-                src={activeBlog.coverImage}
-                alt={activeBlog.title}
-                className="w-full aspect-[16/9] object-cover rounded-2xl"
-              />
-            )}
-
-            <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                {activeBlog.title}
-              </h2>
-              <div className="flex items-center gap-3 text-xs text-slate-400">
-                {activeBlog.readingTime && <span>{activeBlog.readingTime}</span>}
-              </div>
-            </div>
-
-            <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
-              {activeBlog.content}
-            </div>
-          </div>
-        </div>
-      )}
 
       <CleanFooter profile={profile} />
     </div>
