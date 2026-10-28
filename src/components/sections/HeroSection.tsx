@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, MapPin, Sparkles } from "lucide-react";
-import { ProfileData } from "../../services/api";
+import { ProfileData, resolveMediaUrl } from "../../services/api";
 
 interface HeroSectionProps {
   profile: ProfileData | null;
@@ -114,7 +114,7 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
               <div className="relative rounded-3xl overflow-hidden border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900 shadow-2xl">
                 <div className="aspect-[4/4.5] w-full overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950">
                   <img
-                    src={profile.avatarUrl}
+                    src={resolveMediaUrl(profile.avatarUrl)}
                     alt={profile.name}
                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   />

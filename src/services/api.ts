@@ -4,11 +4,16 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export function resolveMediaUrl(url?: string | null): string {
   if (!url) return '';
-  // If the image was saved with localhost:4000 during local dev, replace with the live API URL in production
-  if (url.includes('localhost:4000') && API_BASE_URL && !API_BASE_URL.includes('localhost')) {
-    return url.replace('http://localhost:4000', API_BASE_URL);
+  // Force HTTPS if URL was generated with http
+  let cleanUrl = url;
+  if (cleanUrl.startsWith('http://rakibulhr.onrender.com')) {
+    cleanUrl = cleanUrl.replace('http://', 'https://');
   }
-  return url;
+  // If the image was saved with localhost:4000 during local dev, replace with the live API URL in production
+  if (cleanUrl.includes('localhost:4000') && API_BASE_URL && !API_BASE_URL.includes('localhost')) {
+    return cleanUrl.replace('http://localhost:4000', API_BASE_URL);
+  }
+  return cleanUrl;
 }
 
 export interface ProjectData {
