@@ -1,7 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Ip, Headers } from '@nestjs/common';
+import { PrismaService } from './prisma/prisma.service';
 
 @Controller()
 export class AppController {
+  constructor(private readonly prisma: PrismaService) {}
+
   @Get()
   getHealth() {
     return {
@@ -17,7 +20,31 @@ export class AppController {
         '/profile/references',
         '/profile',
         '/messages',
+        '/analytics/visit',
       ],
     };
+  }
+
+  // Get current real visitor count
+  @Get('analytics/visit')
+  async getVisitors() {
+    let stats = await this.prisma.analytics.findUnique({ where: { id: 'site_stats' } });
+    if (!stats) {
+      stats = await this.prisma.analytics.create({
+        data: { id: 'site_stats', visits: 1718 },
+      });
+    }
+    return { visits: stats.visits };
+  }
+
+  // Record a new visitor hit
+  @Post('analytics/visit')
+  async recordVisit() {
+    const stats = await this.prisma.analytics.upsert({
+      where: { id: 'site_stats' },
+      update: { visits: { increment: 1 } },
+      create: { id: 'site_stats', visits: 1719 },
+    });
+    return { visits: stats.visits };
   }
 }

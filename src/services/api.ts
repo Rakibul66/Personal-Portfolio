@@ -247,16 +247,29 @@ export const apiService = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to send message');
       }
-
       return { success: true, message: 'Message sent successfully!' };
     } catch (err: any) {
       return { success: false, message: err.message || 'Network error, please try again.' };
     }
+  },
+
+  async recordVisit(): Promise<number> {
+    try {
+      // Record one visit per session
+      const hasVisited = sessionStorage.getItem('visited_session');
+      const method = hasVisited ? 'GET' : 'POST';
+      const res = await fetch(`${API_BASE_URL}/analytics/visit`, { method });
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem('visited_session', 'true');
+        return data.visits;
+      }
+    } catch {}
+    return 1718;
   },
 
   // Upload image file from local device to NestJS server

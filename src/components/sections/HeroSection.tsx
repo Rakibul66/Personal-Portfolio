@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Download, MapPin, Sparkles, Eye, ArrowUpRight } from "lucide-react";
+import { Download, MapPin, Sparkles } from "lucide-react";
 import { ProfileData } from "../../services/api";
 
 interface HeroSectionProps {
@@ -9,12 +9,6 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionProps) {
-  const [visitorCount] = useState<number>(() => {
-    const saved = localStorage.getItem("rakibul_visits");
-    if (saved) return parseInt(saved, 10);
-    return 1718;
-  });
-
   if (!profile) return null;
 
   return (
@@ -62,7 +56,7 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
             )}
           </div>
 
-          {/* Action CTAs: Download CV Button replacing hire me */}
+          {/* Action CTAs: Download CV Button */}
           <div className="flex flex-wrap items-center gap-3.5 pt-2">
             {profile.resumeUrl ? (
               <a
@@ -130,31 +124,6 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
             </div>
           ) : null}
         </motion.div>
-      </div>
-
-      {/* Visitor Counter placed neatly below in its own bar */}
-      <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
-            <Eye size={18} />
-          </div>
-          <div>
-            <div className="text-[11px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
-              Homepage Visitors
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-              <span>{visitorCount.toLocaleString()}</span>
-              <span className="text-xs font-semibold text-slate-400 font-normal">total verified visits</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Live Analytics
-          </span>
-        </div>
       </div>
     </section>
   );

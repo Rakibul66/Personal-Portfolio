@@ -160,3 +160,9 @@ model Message {
 
   @@index([createdAt(sort: Desc), id(sort: Desc)])
 }
+
+model Analytics {
+  id        String   @id @default("site_stats")
+  visits    Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
