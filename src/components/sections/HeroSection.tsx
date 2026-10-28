@@ -77,16 +77,20 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
               </a>
             )}
 
-            {/* Direct Collaboration Option / WhatsApp Link */}
+            {/* Direct Collaboration Option: Work With Me -> Direct WhatsApp Link if saved, else modal */}
             {profile.whatsapp ? (
               <a
-                href={profile.whatsapp.startsWith("http") ? profile.whatsapp : `https://wa.me/${profile.whatsapp.replace(/[^0-9]/g, "")}`}
+                href={
+                  profile.whatsapp.startsWith("http")
+                    ? profile.whatsapp
+                    : `https://wa.me/${profile.whatsapp.replace(/[^0-9]/g, "")}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-5 py-3 rounded-full text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/10 transition-colors"
               >
                 <Sparkles size={16} />
-                <span>Hire Me (WhatsApp)</span>
+                <span>Work With Me</span>
               </a>
             ) : onOpenHireDialog ? (
               <button
