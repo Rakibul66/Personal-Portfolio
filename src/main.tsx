@@ -6,6 +6,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import ProjectsPage from "./pages/ProjectsPage";
 import BlogPage from "./pages/BlogPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
+import ProjectDetailPage from "./pages/ProjectDetailPage";
 import VenturesPage from "./pages/VenturesPage";
 import ContactPage from "./pages/ContactPage";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
           {/* Dedicated Catalog Sub-Pages with Filters, Themes & Pagination */}
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:id" element={<ProjectDetailPage />} />
           <Route path="/ventures" element={<VenturesPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<ArticleDetailPage />} />

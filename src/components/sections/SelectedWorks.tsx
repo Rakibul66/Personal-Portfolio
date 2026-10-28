@@ -30,17 +30,18 @@ export default function SelectedWorks({ projects }: SelectedWorksProps) {
 
       {/* Grid Layout (3 Columns on Large, 2 on Medium, 1 on Mobile) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.slice(0, 6).map((project, index) => {
+        {projects.slice(0, 6).map((project) => {
           const coverImg =
             resolveMediaUrl(project.imageUrl) ||
             "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80";
+          const projectUrl = `/projects/${project.id || encodeURIComponent(project.title)}`;
 
           return (
             <article
               key={project.id || project.title}
               className="group flex flex-col justify-between rounded-3xl border border-slate-800 bg-[#0d1322]/80 overflow-hidden backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/50 hover:-translate-y-1.5 shadow-2xl"
             >
-              <div>
+              <Link to={projectUrl} className="block flex-1 flex flex-col">
                 {/* Image Cover */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 border-b border-slate-800">
                   <img
@@ -60,7 +61,7 @@ export default function SelectedWorks({ projects }: SelectedWorksProps) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-xl font-extrabold text-white group-hover:text-cyan-300 transition-colors">
                     {project.title}
                   </h3>
@@ -69,35 +70,47 @@ export default function SelectedWorks({ projects }: SelectedWorksProps) {
                       {project.subtitle}
                     </p>
                   )}
-                  <p className="mt-3 text-xs md:text-sm text-slate-300 line-clamp-3 leading-relaxed">
-                    {project.description}
-                  </p>
+                  {project.description && (
+                    <p className="mt-3 text-xs md:text-sm text-slate-300 line-clamp-3 leading-relaxed">
+                      {project.description}
+                    </p>
+                  )}
 
                   {/* Stack Badges */}
-                  <div className="flex flex-wrap gap-1 mt-4">
-                    {(project.technologies || []).slice(0, 4).map((tech, i) => (
-                      <span
-                        key={i}
-                        className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-4">
+                      {project.technologies.slice(0, 4).map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
+              </Link>
 
-              {/* Action Buttons */}
-              <div className="p-6 pt-0 border-t border-slate-800/60 mt-4 flex items-center justify-between">
-                <div className="flex gap-2.5 pt-4">
+              {/* Action Buttons & Details link (no awkward gap) */}
+              <div className="px-6 py-4 border-t border-slate-800/60 flex items-center justify-between gap-3">
+                <Link
+                  to={projectUrl}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  View Details <ArrowRight size={13} />
+                </Link>
+
+                <div className="flex items-center gap-3">
                   {project.playStoreUrl && (
                     <a
                       href={project.playStoreUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-bold text-cyan-400 hover:underline flex items-center gap-1"
+                      className="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+                      title="Play Store"
                     >
-                      Play Store <ExternalLink size={12} />
+                      App <ExternalLink size={12} />
                     </a>
                   )}
                   {project.githubUrl && (
@@ -105,23 +118,24 @@ export default function SelectedWorks({ projects }: SelectedWorksProps) {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1"
+                      className="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+                      title="Source Code"
                     >
                       Source <ExternalLink size={12} />
                     </a>
                   )}
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:underline"
+                      title="Live Demo"
+                    >
+                      Demo <ArrowUpRight size={14} />
+                    </a>
+                  )}
                 </div>
-
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pt-4 inline-flex items-center gap-1 text-xs font-extrabold text-cyan-400 hover:underline"
-                  >
-                    Live Demo <ArrowUpRight size={14} />
-                  </a>
-                )}
               </div>
             </article>
           );

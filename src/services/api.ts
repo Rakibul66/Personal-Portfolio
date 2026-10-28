@@ -163,6 +163,18 @@ export const apiService = {
     return cached && cached.length > 0 ? cached : [];
   },
 
+  async getProjectById(id: string): Promise<ProjectData | null> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/projects/${id}`);
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {}
+    // Fallback to searching loaded projects list
+    const projects = await this.getProjects();
+    return projects.find((p) => p.id === id) || null;
+  },
+
   async getVentures(): Promise<VentureData[]> {
     const cached = getCached<VentureData[]>('ventures');
     try {

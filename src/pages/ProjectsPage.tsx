@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   FolderGit2,
   Search,
@@ -9,6 +10,7 @@ import {
   Rows,
   Layers,
   Filter,
+  ArrowRight,
 } from "lucide-react";
 import Header from "../components/sections/Header";
 import CleanFooter from "../components/sections/CleanFooter";
@@ -200,87 +202,101 @@ export default function ProjectsPage() {
         {/* Cards Grid Theme */}
         {!loading && viewTheme === "card" && filteredProjects.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedProjects.map((project) => (
-              <article
-                key={project.id || project.title}
-                className="group flex flex-col justify-between rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d1322]/80 overflow-hidden backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:-translate-y-1.5 shadow-lg dark:shadow-2xl"
-              >
-                <div>
-                  {project.imageUrl && (
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                      <img
-                        src={resolveMediaUrl(project.imageUrl)}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
-
-                  <div className="p-6 space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
-                        {project.category || "Application"}
-                      </span>
-                      {project.featured && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20">
-                          <Sparkles size={10} /> Featured
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    {project.subtitle && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                        {project.subtitle}
-                      </p>
-                    )}
-                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
-                      {project.description}
-                    </p>
-
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-2">
-                        {project.technologies.map((t) => (
-                          <span
-                            key={t}
-                            className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300"
-                          >
-                            {t}
-                          </span>
-                        ))}
+            {paginatedProjects.map((project) => {
+              const projectUrl = `/projects/${project.id || encodeURIComponent(project.title)}`;
+              return (
+                <article
+                  key={project.id || project.title}
+                  className="group flex flex-col justify-between rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d1322]/80 overflow-hidden backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:-translate-y-1.5 shadow-lg dark:shadow-2xl"
+                >
+                  <Link to={projectUrl} className="block flex-1 flex flex-col">
+                    {project.imageUrl && (
+                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+                        <img
+                          src={resolveMediaUrl(project.imageUrl)}
+                          alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
                       </div>
                     )}
-                  </div>
-                </div>
 
-                <div className="px-6 pb-6 pt-2 flex items-center gap-3">
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold bg-cyan-500 text-white hover:bg-cyan-600 transition-all shadow-md shadow-cyan-500/20"
+                    <div className="p-6 space-y-3 flex-1 flex flex-col">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                          {project.category || "Application"}
+                        </span>
+                        {project.featured && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20">
+                            <Sparkles size={10} /> Featured
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                        {project.title}
+                      </h3>
+                      {project.subtitle && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                          {project.subtitle}
+                        </p>
+                      )}
+                      {project.description && (
+                        <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                          {project.description}
+                        </p>
+                      )}
+
+                      {project.technologies && project.technologies.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-2 mt-auto">
+                          {project.technologies.map((t) => (
+                            <span
+                              key={t}
+                              className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+
+                  <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between gap-3">
+                    <Link
+                      to={projectUrl}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline"
                     >
-                      <span>Live Site</span>
-                      <ExternalLink size={13} />
-                    </a>
-                  )}
-                  {project.playStoreUrl && (
-                    <a
-                      href={project.playStoreUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:border-cyan-400/40 transition-all text-slate-700 dark:text-white"
-                    >
-                      <span>Play Store</span>
-                      <ArrowUpRight size={13} />
-                    </a>
-                  )}
-                </div>
-              </article>
-            ))}
+                      View Details <ArrowRight size={13} />
+                    </Link>
+
+                    <div className="flex items-center gap-2">
+                      {project.playStoreUrl && (
+                        <a
+                          href={project.playStoreUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 hover:border-cyan-400/40 text-slate-700 dark:text-slate-300 hover:text-white transition-colors flex items-center gap-1"
+                        >
+                          <span>App</span>
+                          <ExternalLink size={11} />
+                        </a>
+                      )}
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1 rounded-lg text-xs font-bold bg-cyan-500 text-white hover:bg-cyan-600 transition-all flex items-center gap-1 shadow-sm shadow-cyan-500/20"
+                        >
+                          <span>Demo</span>
+                          <ArrowUpRight size={12} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
 
