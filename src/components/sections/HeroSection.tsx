@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, MapPin, Sparkles } from "lucide-react";
-import { ProfileData } from "../../services/api";
+import { ProfileData, resolveMediaUrl, getDownloadableCvUrl } from "../../services/api";
 
 interface HeroSectionProps {
   profile: ProfileData | null;
@@ -56,7 +56,8 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
           <div className="flex flex-wrap items-center gap-3.5 pt-2">
             {profile.resumeUrl ? (
               <a
-                href={profile.resumeUrl}
+                href={getDownloadableCvUrl(profile.resumeUrl)}
+                download="MD_Rakibul_Hasan_CV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#944a38] to-[#2d5d54] hover:from-[#a8543f] hover:to-[#366f64] shadow-lg shadow-black/10 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"

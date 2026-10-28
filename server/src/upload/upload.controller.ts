@@ -77,6 +77,7 @@ export class UploadController {
         file.buffer,
         'rakibulhr-portfolio',
         resourceType,
+        file.originalname,
       );
 
       return {
