@@ -121,6 +121,7 @@ export interface ProfileData {
   email?: string;
   phone?: string;
   whatsapp?: string;
+  introVideoUrl?: string;
   location?: string;
   hobbies: string[];
 }
