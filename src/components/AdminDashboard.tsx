@@ -637,12 +637,26 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
     if (!token) return;
     setLoading(true);
     try {
-      await apiService.createExperience(token, {
-        ...educationForm,
-        type: "EDUCATION",
-        details: educationForm.details || [],
+      if (editingEducationId) {
+        await apiService.updateExperience(token, editingEducationId, {
+          ...educationForm,
+          type: "EDUCATION",
+          details: educationForm.details || [],
+        });
+        showToast("Education record updated");
+      } else {
+        await apiService.createExperience(token, {
+          ...educationForm,
+          type: "EDUCATION",
+          details: educationForm.details || [],
+        });
+        showToast("Education record saved");
+      }
+      setSuccessDialog({
+        open: true,
+        title: editingEducationId ? "Degree Updated!" : "Degree Added Successfully!",
+        message: "Your academic qualification has been saved and is now live on your portfolio.",
       });
-      showToast("Education record saved");
       setViewMode("list");
       const updated = await apiService.getExperiences("EDUCATION");
       setEducationList(updated);
