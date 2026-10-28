@@ -14,13 +14,14 @@ import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
 import { apiService, BlogData, ProfileData } from "../services/api";
+import { initialBlogsData, initialProfileData } from "../data/initialFallbackData";
 
 const ARTICLES_PER_PAGE = 6;
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<BlogData[]>(initialBlogsData);
+  const [profile, setProfile] = useState<ProfileData>(initialProfileData);
+  const [loading, setLoading] = useState(false);
 
   // Search & Filter
   const [search, setSearch] = useState("");

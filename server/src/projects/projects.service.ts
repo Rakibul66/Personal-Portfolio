@@ -6,8 +6,60 @@ import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 export class ProjectsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(params?: { cursor?: string; limit?: number; category?: string }) {
+    const take = params?.limit ? Math.min(params.limit, 50) : undefined;
+    const where: any = {};
+    if (params?.category && params.category !== 'All') {
+      where.category = params.category;
+    }
+
+    // High-performance Keyset Pagination using composite [createdAt, id] index
+    if (params?.cursor) {
+      const items = await this.prisma.project.findMany({
+        take: take ? take + 1 : undefined,
+        skip: 1,
+        cursor: { id: params.cursor },
+        where,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      });
+
+      let nextCursor: string | null = null;
+      if (take && items.length > take) {
+        const nextItem = items.pop();
+        nextCursor = nextItem ? nextItem.id : null;
+      }
+
+      return {
+        items,
+        nextCursor,
+        hasMore: !!nextCursor,
+      };
+    }
+
+    // If no cursor is passed and limit is requested, return initial keyset page
+    if (take) {
+      const items = await this.prisma.project.findMany({
+        take: take + 1,
+        where,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      });
+
+      let nextCursor: string | null = null;
+      if (items.length > take) {
+        const nextItem = items.pop();
+        nextCursor = nextItem ? nextItem.id : null;
+      }
+
+      return {
+        items,
+        nextCursor,
+        hasMore: !!nextCursor,
+      };
+    }
+
+    // Default backward-compatible full list (sorted by featured, order, createdAt)
     return this.prisma.project.findMany({
+      where,
       orderBy: [{ featured: 'desc' }, { order: 'asc' }, { createdAt: 'desc' }],
     });
   }

@@ -2,6 +2,15 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
+export function resolveMediaUrl(url?: string | null): string {
+  if (!url) return '';
+  // If the image was saved with localhost:4000 during local dev, replace with the live API URL in production
+  if (url.includes('localhost:4000') && API_BASE_URL && !API_BASE_URL.includes('localhost')) {
+    return url.replace('http://localhost:4000', API_BASE_URL);
+  }
+  return url;
+}
+
 export interface ProjectData {
   id?: string;
   title: string;
@@ -106,77 +115,129 @@ export interface ContactMessagePayload {
   message: string;
 }
 
+// Memory and LocalStorage Cache Helpers for Instant Loading
+const CACHE_PREFIX = 'rakibulhr_cache_';
+
+function getCached<T>(key: string): T | null {
+  try {
+    const item = localStorage.getItem(CACHE_PREFIX + key);
+    return item ? JSON.parse(item) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setCache<T>(key: string, data: T): void {
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(data));
+  } catch {}
+}
+
 export const apiService = {
-  // Public Data Fetching
+  // Public Data Fetching with Instant Cache & Background Freshness
   async getProfile(): Promise<ProfileData | null> {
+    const cached = getCached<ProfileData>('profile');
     try {
       const res = await fetch(`${API_BASE_URL}/profile`);
-      if (!res.ok) return null;
-      return res.json();
-    } catch {
-      return null;
-    }
+      if (res.ok) {
+        const data = await res.json();
+        setCache('profile', data);
+        return data;
+      }
+    } catch {}
+    return cached;
   },
 
   async getProjects(): Promise<ProjectData[]> {
+    const cached = getCached<ProjectData[]>('projects');
     try {
       const res = await fetch(`${API_BASE_URL}/projects`);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache('projects', data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async getVentures(): Promise<VentureData[]> {
+    const cached = getCached<VentureData[]>('ventures');
     try {
       const res = await fetch(`${API_BASE_URL}/ventures`);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache('ventures', data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async getBlogs(): Promise<BlogData[]> {
+    const cached = getCached<BlogData[]>('blogs');
     try {
       const res = await fetch(`${API_BASE_URL}/blogs`);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache('blogs', data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async getExperiences(type?: string): Promise<ExperienceData[]> {
+    const cacheKey = `experiences_${type || 'all'}`;
+    const cached = getCached<ExperienceData[]>(cacheKey);
     try {
       const url = type ? `${API_BASE_URL}/profile/experiences?type=${type}` : `${API_BASE_URL}/profile/experiences`;
       const res = await fetch(url);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache(cacheKey, data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async getReferences(): Promise<ReferenceData[]> {
+    const cached = getCached<ReferenceData[]>('references');
     try {
       const res = await fetch(`${API_BASE_URL}/profile/references`);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache('references', data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async getShowcase(): Promise<ShowcaseVideoData[]> {
+    const cached = getCached<ShowcaseVideoData[]>('showcase');
     try {
       const res = await fetch(`${API_BASE_URL}/showcase`);
-      if (!res.ok) return [];
-      return res.json();
-    } catch {
-      return [];
-    }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setCache('showcase', data);
+          return data;
+        }
+      }
+    } catch {}
+    return cached && cached.length > 0 ? cached : [];
   },
 
   async submitMessage(payload: ContactMessagePayload): Promise<{ success: boolean; message: string }> {

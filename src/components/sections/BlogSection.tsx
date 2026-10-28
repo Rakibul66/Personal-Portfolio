@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, Clock, ArrowRight, Tag } from "lucide-react";
-import { apiService, BlogData } from "../../services/api";
+import { apiService, BlogData, resolveMediaUrl } from "../../services/api";
 
 export default function BlogSection() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -41,7 +41,7 @@ export default function BlogSection() {
             {blog.coverImage && (
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-950 border-b border-white/5">
                 <img
-                  src={blog.coverImage}
+                  src={resolveMediaUrl(blog.coverImage)}
                   alt={blog.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {

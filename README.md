@@ -70,6 +70,11 @@ npm run dev
 
 ---
 
+## 🔐 Admin Studio Access
+
+The Admin Studio is located at `/admin` (e.g. `https://your-domain.com/admin` or `http://localhost:5173/admin`).
+- Initial login credentials are set via the `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables in your server `.env` or deployment dashboard.
+- Password hashes are securely verified via bcrypt, and sessions use signed JWT bearer tokens.
 
 ---
 
@@ -124,12 +129,12 @@ This project is architected for zero-cost production deployment using **Render**
    - **Runtime**: `Node`
    - **Build Command**: `npm install && npx prisma generate && npm run build`
    - **Start Command**: `node dist/src/main`
-5. Under **Environment Variables**, add:
-   - `DATABASE_URL`: `postgresql://neondb_owner:npg_0BYbJivoKu4N@ep-weathered-surf-azl49bdw-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require`
-   - `JWT_SECRET`: `super-secret-jwt-key-rakibulhr-portfolio-2026`
+5. Under **Environment Variables**, configure your private credentials:
+   - `DATABASE_URL`: `your-neon-postgres-connection-string`
+   - `JWT_SECRET`: `your-secure-random-jwt-secret`
    - `PORT`: `4000`
-   - `ADMIN_EMAIL`: `admin@rakibulhr.dev`
-   - `ADMIN_PASSWORD`: `admin_secure_password_123`
+   - `ADMIN_EMAIL`: `your-admin-email`
+   - `ADMIN_PASSWORD`: `your-strong-admin-password`
 6. Click **Deploy Web Service**. You will receive your public API endpoint:
    `https://rakibulhr-api.onrender.com`
 
