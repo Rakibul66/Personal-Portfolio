@@ -26,19 +26,26 @@ export class UploadController {
         fileSize: 100 * 1024 * 1024, // 100MB limit for images, CVs, and videos
       },
       fileFilter: (req, file, callback) => {
-        if (
-          !file.mimetype.match(
-            /\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg|pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/,
-          )
-        ) {
-          return callback(
-            new BadRequestException(
-              'Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) or CV documents (PDF, DOC, DOCX) are allowed',
-            ),
-            false,
-          );
+        const ext = extname(file.originalname).toLowerCase();
+        const allowedExtensions = [
+          '.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg',
+          '.mp4', '.webm', '.mov', '.ogg',
+          '.pdf', '.doc', '.docx'
+        ];
+        const isMimeAllowed = file.mimetype.match(
+          /\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg|pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document|octet-stream)$/i,
+        );
+
+        if (allowedExtensions.includes(ext) || isMimeAllowed) {
+          return callback(null, true);
         }
-        callback(null, true);
+
+        return callback(
+          new BadRequestException(
+            'Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) or CV documents (PDF, DOC, DOCX) are allowed',
+          ),
+          false,
+        );
       },
     }),
   )
