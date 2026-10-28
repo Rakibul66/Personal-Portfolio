@@ -12,16 +12,38 @@
 
 :root {
   color-scheme: dark;
-  --bg: #050b16;
-  --surface: rgba(7, 14, 24, 0.42);
-  --surface-strong: rgba(7, 14, 24, 0.7);
-  --line: rgba(148, 163, 184, 0.1);
-  --line-strong: rgba(125, 211, 252, 0.18);
-  --text: #e6edf7;
-  --muted: #98a8bf;
-  --cyan: #7dd3fc;
-  --blue: #93c5fd;
-  --lime: #d9f99d;
+  --bg: #030712;
+  --bg-gradient: radial-gradient(circle at 15% 12%, rgba(56, 189, 248, 0.08), transparent 26%),
+    radial-gradient(circle at 82% 8%, rgba(99, 102, 241, 0.08), transparent 26%),
+    linear-gradient(180deg, #020617 0%, #030712 40%, #020617 100%);
+  --surface: rgba(15, 23, 42, 0.65);
+  --surface-card: rgba(15, 23, 42, 0.75);
+  --surface-strong: rgba(15, 23, 42, 0.9);
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(56, 189, 248, 0.25);
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --cyan: #38bdf8;
+  --blue: #60a5fa;
+  --lime: #4ade80;
+}
+
+html.light {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --bg-gradient: radial-gradient(circle at 15% 12%, rgba(14, 165, 233, 0.06), transparent 26%),
+    radial-gradient(circle at 82% 8%, rgba(99, 102, 241, 0.05), transparent 26%),
+    linear-gradient(180deg, #ffffff 0%, #f1f5f9 45%, #f8fafc 100%);
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-card: rgba(255, 255, 255, 0.95);
+  --surface-strong: #ffffff;
+  --line: rgba(15, 23, 42, 0.08);
+  --line-strong: rgba(14, 165, 233, 0.35);
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --cyan: #0284c7;
+  --blue: #2563eb;
+  --lime: #16a34a;
 }
 
 * {
@@ -36,13 +58,12 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--text);
-  font-family: "Theater", sans-serif;
-  background:
-    radial-gradient(circle at 15% 12%, rgba(125, 211, 252, 0.08), transparent 24%),
-    radial-gradient(circle at 82% 8%, rgba(147, 197, 253, 0.1), transparent 24%),
-    linear-gradient(180deg, #02050c 0%, #050b16 38%, #030813 100%);
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
   background-attachment: fixed;
-  letter-spacing: 0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.01em;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -70,7 +91,7 @@ a {
   right: 0;
   top: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
   pointer-events: none;
 }
 
@@ -82,10 +103,10 @@ a {
   border-radius: 999px;
   border: 0;
   background: transparent;
-  color: #9bdaf0;
-  font-size: 0.68rem;
+  color: var(--cyan);
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
 }
 
@@ -95,7 +116,7 @@ a {
   height: 0.55rem;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--cyan), var(--lime));
-  box-shadow: 0 0 18px rgba(103, 232, 249, 0.85);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
 }
 
 .display-title {
@@ -104,7 +125,7 @@ a {
 
 .metric-card {
   position: relative;
-  border-top: 1px solid rgba(148, 163, 184, 0.14);
+  border-top: 1px solid var(--line);
   padding-top: 1.25rem;
 }
 
@@ -115,24 +136,22 @@ a {
   top: 0;
   width: 4rem;
   height: 1px;
-  background: rgba(125, 211, 252, 0.55);
+  background: var(--cyan);
   pointer-events: none;
-}
-
-.plain-surface {
-  background: linear-gradient(180deg, rgba(5, 11, 22, 0.3), rgba(5, 11, 22, 0));
-}
-
-.section-divider {
-  border-top: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .hero-grid {
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
   background-size: 56px 56px;
-  mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.7), transparent 86%);
+  mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), transparent 85%);
+}
+
+html.light .hero-grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
 }
 
 @media (max-width: 768px) {
