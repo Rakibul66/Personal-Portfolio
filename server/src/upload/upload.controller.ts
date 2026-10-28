@@ -36,8 +36,8 @@ export class UploadController {
         fileSize: 100 * 1024 * 1024, // 100MB limit for images & MP4/WebM videos
       },
       fileFilter: (req, file, callback) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg)$/)) {
-          return callback(new BadRequestException('Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) are allowed'), false);
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg|pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/)) {
+          return callback(new BadRequestException('Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) or CV documents (PDF, DOC, DOCX) are allowed'), false);
         }
         callback(null, true);
       },

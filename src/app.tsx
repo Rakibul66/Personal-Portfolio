@@ -8,9 +8,8 @@ import HeroSection from "./components/sections/HeroSection";
 import AcademicAndExperienceSection from "./components/sections/AcademicAndExperienceSection";
 import SelectedWorks from "./components/sections/SelectedWorks";
 import InHouseVenturesSection from "./components/sections/InHouseVenturesSection";
-import ShowcaseSection from "./components/sections/ShowcaseSection";
+import FullWidthVideoSection from "./components/sections/FullWidthVideoSection";
 import ClientReviewsSection from "./components/sections/ClientReviewsSection";
-import VideoIntroModal from "./components/sections/VideoIntroModal";
 import CleanFooter from "./components/sections/CleanFooter";
 import BlogSection from "./components/sections/BlogSection";
 import {
@@ -104,7 +103,6 @@ function HireDialog({ open, onClose }: HireDialogProps) {
 }
 
 export default function App() {
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isHireDialogOpen, setIsHireDialogOpen] = useState(false);
 
   // Dynamic Live Database States - pure database driven (no hardcoded seed data)
@@ -152,47 +150,35 @@ export default function App() {
       <Header brandName={liveProfile?.name} profile={liveProfile} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-28 pb-16 space-y-16 md:space-y-24">
-        {/* Modern Professional Hero Section - Displays only what's configured in Admin Studio */}
+        {/* Modern Professional Hero Section with Download CV Button & Visitor Count below */}
         {liveProfile && (
           <HeroSection
             profile={liveProfile}
-            hasVideo={liveShowcases.length > 0}
-            onOpenVideo={() => setIsVideoModalOpen(true)}
             onOpenHireDialog={() => setIsHireDialogOpen(true)}
           />
         )}
 
-        {/* Selected Works - Displays only projects added via Admin Studio */}
+        {/* Selected Works - Displays projects added via Admin Studio */}
         <SelectedWorks projects={liveProjects} />
 
-        {/* Professional Experience & Education - Displays only items added via Admin Studio */}
+        {/* Full Width Video Section - Plays directly in page if video/YouTube input provided in Admin Studio */}
+        {liveShowcases.length > 0 && <FullWidthVideoSection videos={liveShowcases} />}
+
+        {/* Professional Experience & Education - Displays items added via Admin Studio */}
         <AcademicAndExperienceSection liveExperiences={liveExperiences} />
 
-        {/* In-House Ventures - Displays only ventures added via Admin Studio */}
+        {/* In-House Ventures - Displays ventures added via Admin Studio */}
         <InHouseVenturesSection />
 
-        {/* Launch Archive & Video Demos - Displays only showcase videos added via Admin Studio */}
-        {liveShowcases.length > 0 && <ShowcaseSection videos={liveShowcases} />}
-
-        {/* Client Reviews - Displays only reviews added via Admin Studio */}
+        {/* Client Reviews - Displays reviews added via Admin Studio */}
         {liveReviews.length > 0 && <ClientReviewsSection reviews={liveReviews} />}
 
-        {/* Technical Blog - Displays only articles added via Admin Studio */}
+        {/* Technical Blog - Displays articles added via Admin Studio */}
         <BlogSection />
       </main>
 
       {/* Clean Bottom Footer */}
       <CleanFooter profile={liveProfile} />
-
-      {/* Dedicated Video Introduction Modal */}
-      {liveShowcases.length > 0 && (
-        <VideoIntroModal
-          isOpen={isVideoModalOpen}
-          onClose={() => setIsVideoModalOpen(false)}
-          videoUrl={liveShowcases[0]?.youtubeUrl || liveShowcases[0]?.videoFile}
-          name={liveProfile?.name}
-        />
-      )}
 
       {/* Direct Collaboration Modal */}
       <HireDialog open={isHireDialogOpen} onClose={() => setIsHireDialogOpen(false)} />

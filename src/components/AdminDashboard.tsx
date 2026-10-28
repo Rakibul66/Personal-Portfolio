@@ -2876,6 +2876,104 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                   </div>
                 </div>
 
+                {/* CV / Resume Upload & Direct URL */}
+                <div className="p-5 rounded-2xl border border-slate-800 bg-[#090d16]/70 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-cyan-400 uppercase">CV / Resume Document</label>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Upload a PDF/Word CV or enter an external document URL</p>
+                    </div>
+                    {profile.resumeUrl && (
+                      <a
+                        href={profile.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-cyan-400 hover:underline flex items-center gap-1 font-mono"
+                      >
+                        <ExternalLink size={12} />
+                        View Current CV
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="text"
+                      placeholder="Paste PDF link or upload via button ->"
+                      value={profile.resumeUrl || ""}
+                      onChange={(e) => setProfile({ ...profile, resumeUrl: e.target.value })}
+                      className="flex-1 bg-black/40 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    />
+                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0">
+                      <Upload size={14} />
+                      <span>Upload CV (PDF)</span>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file || !token) return;
+                          try {
+                            const res = await apiService.uploadFile(token, file);
+                            setProfile((prev) => ({ ...prev, resumeUrl: res.url }));
+                            showToast("CV uploaded successfully!");
+                          } catch (err: any) {
+                            alert("CV Upload Failed: " + err.message);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {/* Profile Photo / Avatar Upload */}
+                <div className="p-5 rounded-2xl border border-slate-800 bg-[#090d16]/70 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-cyan-400 uppercase">Profile Photo / Avatar</label>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Upload your headshot image or paste an image URL</p>
+                    </div>
+                    {profile.avatarUrl && (
+                      <img
+                        src={profile.avatarUrl}
+                        alt="Avatar Preview"
+                        className="w-10 h-10 rounded-full object-cover border border-cyan-400"
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="text"
+                      placeholder="Paste image link or upload via button ->"
+                      value={profile.avatarUrl || ""}
+                      onChange={(e) => setProfile({ ...profile, avatarUrl: e.target.value })}
+                      className="flex-1 bg-black/40 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    />
+                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-bold transition-all shrink-0">
+                      <Upload size={14} />
+                      <span>Upload Photo</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file || !token) return;
+                          try {
+                            const res = await apiService.uploadFile(token, file);
+                            setProfile((prev) => ({ ...prev, avatarUrl: res.url }));
+                            showToast("Photo uploaded successfully!");
+                          } catch (err: any) {
+                            alert("Photo Upload Failed: " + err.message);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}

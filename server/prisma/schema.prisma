@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -42,16 +42,16 @@ model Project {
   description  String
   technologies String[]
   category     String   @default("Mobile Application")
-  imageUrl     String?  // Cover image / screenshot URL
-  images       String[] @default([]) // Optional multiple screenshots / gallery
+  imageUrl     String?
   githubUrl    String?
   liveUrl      String?
   playStoreUrl String?
-  appStoreUrl  String?
   featured     Boolean  @default(false)
   order        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  appStoreUrl  String?
+  images       String[] @default([])
 
   @@index([createdAt(sort: Desc), id(sort: Desc)])
   @@index([category])
@@ -60,15 +60,15 @@ model Project {
 
 model InHouseVentures {
   id          String   @id @default(uuid())
-  title       String   // e.g. "Bponi Technologies", "SaaS Scripts", "ThemeForest Portfolio"
-  tagline     String?  // e.g. "Digital Asset Marketplace"
+  title       String
+  tagline     String?
   description String
-  category    String   @default("In-House Venture") // "Venture", "Passive Income", "Product", "Micro-SaaS"
-  imageUrl    String?  // Optional cover / logo
-  linkUrl     String   // Destination link
+  category    String   @default("In-House Venture")
+  imageUrl    String?
+  linkUrl     String
   linkText    String   @default("Visit Venture")
-  status      String   @default("ACTIVE") // "ACTIVE", "BETA", "LAUNCHING"
-  revenue     String?  // Optional stats e.g. "$2k/mo", "500+ Clients"
+  status      String   @default("ACTIVE")
+  revenue     String?
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -94,34 +94,34 @@ model Blog {
 }
 
 model Experience {
-  id           String   @id @default(uuid())
-  role         String
-  company      String
-  location     String?
-  period       String
-  details      String[]
-  type         String   @default("EXPERIENCE") // "EXPERIENCE" (Company/Work), "EDUCATION", or "FREELANCE"
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(uuid())
+  role      String
+  company   String
+  period    String
+  details   String[]
+  type      String   @default("EXPERIENCE")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  location  String?
 
   @@index([type, order])
 }
 
 model Reference {
-  id          String   @id @default(uuid())
-  name        String
-  role        String
-  company     String
-  email       String?
-  phone       String?
-  feedback    String?
-  avatarUrl   String?  // Client photo/avatar
-  rating      Int      @default(5)
-  videoUrl    String?  // YouTube embed/link or uploaded mp4 file URL
-  videoType   String?  @default("YOUTUBE") // "YOUTUBE", "DEVICE", or "NONE"
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  company   String
+  email     String?
+  phone     String?
+  feedback  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  avatarUrl String?
+  rating    Int      @default(5)
+  videoType String?  @default("YOUTUBE")
+  videoUrl  String?
 
   @@index([order, createdAt(sort: Desc)])
 }
@@ -130,9 +130,9 @@ model ShowcaseVideo {
   id          String   @id @default(uuid())
   title       String
   description String?
-  youtubeUrl  String?  // YouTube link or video ID
-  videoFile   String?  // Uploaded MP4 file from device
-  thumbnail   String?  // Cover image / thumbnail
+  youtubeUrl  String?
+  videoFile   String?
+  thumbnail   String?
   category    String?  @default("Demo")
   order       Int      @default(0)
   createdAt   DateTime @default(now())
