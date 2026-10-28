@@ -2922,6 +2922,34 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                   </div>
                 </div>
 
+                {/* Developer Intro Video (YouTube Link) */}
+                <div className="p-5 rounded-2xl border border-slate-800 bg-[#090d16]/70 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-cyan-400 uppercase">Developer Intro Video (YouTube Link)</label>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Paste your personal developer introduction speech or demo YouTube video URL</p>
+                    </div>
+                    {profile.introVideoUrl && (
+                      <a
+                        href={profile.introVideoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-cyan-400 hover:underline flex items-center gap-1 font-mono"
+                      >
+                        <ExternalLink size={12} />
+                        Watch Video
+                      </a>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                    value={profile.introVideoUrl || ""}
+                    onChange={(e) => setProfile({ ...profile, introVideoUrl: e.target.value })}
+                    className="w-full bg-black/40 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
                 {/* CV / Resume Upload & Direct URL */}
                 <div className="p-5 rounded-2xl border border-slate-800 bg-[#090d16]/70 space-y-3">
                   <div className="flex items-center justify-between">

@@ -144,8 +144,18 @@ export default function App() {
     });
   }, []);
 
+  // Dedicated Developer Intro Video from ProfileConfig, or categorized from showcase
+  const profileIntroVideo: ShowcaseVideoData | null = liveProfile?.introVideoUrl
+    ? {
+        title: "Developer Video Introduction",
+        description: liveProfile.headline || "Engineering scalable mobile ecosystems and digital products.",
+        youtubeUrl: liveProfile.introVideoUrl,
+        category: "Developer Intro",
+      }
+    : null;
+
   // Separate videos categorized as "Intro" or "Speech" vs "Project Showcase / Demos"
-  const introVideos = liveShowcases.filter(
+  const showcaseIntroVideos = liveShowcases.filter(
     (v) =>
       v.category?.toLowerCase().includes("intro") ||
       v.category?.toLowerCase().includes("speech") ||
@@ -153,15 +163,13 @@ export default function App() {
       v.title.toLowerCase().includes("speech")
   );
 
-  const demoVideos = liveShowcases.filter(
-    (v) => !introVideos.includes(v)
-  );
+  const displayIntroVideos: ShowcaseVideoData[] = profileIntroVideo
+    ? [profileIntroVideo, ...showcaseIntroVideos]
+    : showcaseIntroVideos;
 
-  // Fallback: If no video is explicitly tagged with intro, use the first as intro if present
-  const displayIntroVideos =
-    introVideos.length > 0 ? introVideos : liveShowcases.slice(0, 1);
-  const displayDemoVideos =
-    introVideos.length > 0 ? demoVideos : liveShowcases.slice(1);
+  const displayDemoVideos = liveShowcases.filter(
+    (v) => !showcaseIntroVideos.includes(v)
+  );
 
   return (
     <div className="relative min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
