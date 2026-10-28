@@ -36,28 +36,13 @@ export default function Header({ brandName, profile }: HeaderProps) {
   const displayName = profile?.name || brandName || "";
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 transition-colors backdrop-blur-xl bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/80 dark:border-white/10">
+    <header className="fixed top-0 left-0 w-full z-50 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="h-16 sm:h-20 flex justify-between items-center">
-          {/* Logo Brand with avatar thumbnail - seamlessly on header background */}
-          <Link to="/" className="display-title text-base sm:text-lg font-black tracking-tight uppercase flex items-center gap-2.5 group">
-            {profile?.avatarUrl && (
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/30 ring-2 ring-cyan-500/20 group-hover:ring-cyan-500/50 transition-all">
-                <img
-                  src={profile.avatarUrl}
-                  alt={displayName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            {displayName ? (
-              <span className="text-slate-900 dark:text-white">
-                {displayName}
-              </span>
-            ) : null}
-          </Link>
+          {/* Left section intentionally kept blank */}
+          <div className="w-10"></div>
 
-          {/* Navigation Links - seamless on background */}
+          {/* Navigation Links - centered seamless on background */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full px-2.5 py-1 backdrop-blur-md">
             {navLinks.map((item) => {
               const isActive = location.pathname === item.path;
@@ -77,19 +62,8 @@ export default function Header({ brandName, profile }: HeaderProps) {
             })}
           </nav>
 
-          {/* Controls: Theme Switcher & Admin-Added Social Links */}
+          {/* Controls: Admin-Added Social Links */}
           <div className="flex items-center gap-2">
-            {/* Light / Dark Mode Switcher */}
-            <button
-              type="button"
-              onClick={toggleTheme}
-              aria-label="Toggle light or dark theme"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-200 transition-all hover:scale-105 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-cyan-600 dark:hover:text-cyan-300 shadow-sm"
-              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {theme === "dark" ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} className="text-indigo-600" />}
-            </button>
-
             {/* Social Links from admin */}
             {socialLinks.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">

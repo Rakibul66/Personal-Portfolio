@@ -30,6 +30,7 @@ model ProfileConfig {
   twitterUrl  String?
   email       String?  @default("contact@rakibulhr.dev")
   phone       String?
+  whatsapp    String?
   location    String?  @default("Dhaka, Bangladesh")
   hobbies     String[] @default([])
   updatedAt   DateTime @updatedAt

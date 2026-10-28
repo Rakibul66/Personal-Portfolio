@@ -25,19 +25,15 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
           transition={{ duration: 0.6 }}
           className="lg:col-span-7 space-y-6"
         >
-          {/* Status badge & location */}
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Available for High-Impact Roles & Research
-            </span>
-            {profile.location && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+          {/* Location badge */}
+          {profile.location && (
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300">
                 <MapPin size={13} className="text-cyan-500" />
                 {profile.location}
               </span>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Main Title & Headline */}
           <div className="space-y-3">
@@ -80,8 +76,18 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
               </a>
             )}
 
-            {/* Direct Collaboration Option */}
-            {onOpenHireDialog && (
+            {/* Direct Collaboration Option / WhatsApp Link */}
+            {profile.whatsapp ? (
+              <a
+                href={profile.whatsapp.startsWith("http") ? profile.whatsapp : `https://wa.me/${profile.whatsapp.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-5 py-3 rounded-full text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Sparkles size={16} />
+                <span>Hire Me (WhatsApp)</span>
+              </a>
+            ) : onOpenHireDialog ? (
               <button
                 type="button"
                 onClick={onOpenHireDialog}
@@ -90,7 +96,7 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
                 <Sparkles size={16} />
                 <span>Work With Me</span>
               </button>
-            )}
+            ) : null}
           </div>
         </motion.div>
 

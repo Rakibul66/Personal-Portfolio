@@ -104,6 +104,7 @@ export interface ProfileData {
   twitterUrl?: string;
   email?: string;
   phone?: string;
+  whatsapp?: string;
   location?: string;
   hobbies: string[];
 }
@@ -296,8 +297,8 @@ export const apiService = {
     return 1718;
   },
 
-  // Upload image file from local device to NestJS server
-  async uploadImage(token: string, file: File): Promise<{ url: string; filename: string }> {
+  // Upload image/media/document file from local device to Cloudinary via NestJS server
+  async uploadFile(token: string, file: File): Promise<{ url: string; filename: string }> {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -311,10 +312,15 @@ export const apiService = {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to upload image file');
+      throw new Error(err.message || 'Failed to upload file');
     }
 
     return response.json();
+  },
+
+  // Alias for backward compatibility
+  async uploadImage(token: string, file: File): Promise<{ url: string; filename: string }> {
+    return this.uploadFile(token, file);
   },
 
   // Admin Auth

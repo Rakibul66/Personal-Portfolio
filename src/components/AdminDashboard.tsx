@@ -2855,13 +2855,23 @@ export default function AdminDashboard({ onClose }: AdminDashboardProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <div>
                     <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase">Contact Email</label>
                     <input
                       type="email"
                       value={profile.email || ""}
                       onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                      className="w-full bg-[#090d16] border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5 uppercase">WhatsApp (e.g. +8801700000000)</label>
+                    <input
+                      type="text"
+                      placeholder="+8801..."
+                      value={profile.whatsapp || ""}
+                      onChange={(e) => setProfile({ ...profile, whatsapp: e.target.value })}
                       className="w-full bg-[#090d16] border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400"
                     />
                   </div>
