@@ -8,54 +8,78 @@ import {
   Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { memoryStorage } from 'multer';
+import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-const uploadDir = join(process.cwd(), 'uploads');
-if (!existsSync(uploadDir)) {
-  mkdirSync(uploadDir, { recursive: true });
-}
+import { CloudinaryService } from './cloudinary.service';
 
 @Controller('upload')
 export class UploadController {
+  constructor(private readonly cloudinaryService: CloudinaryService) {}
+
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: uploadDir,
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
+      storage: memoryStorage(),
       limits: {
-        fileSize: 100 * 1024 * 1024, // 100MB limit for images & MP4/WebM videos
+        fileSize: 100 * 1024 * 1024, // 100MB limit for images, CVs, and videos
       },
       fileFilter: (req, file, callback) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg|pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/)) {
-          return callback(new BadRequestException('Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) or CV documents (PDF, DOC, DOCX) are allowed'), false);
+        if (
+          !file.mimetype.match(
+            /\/(jpg|jpeg|png|gif|webp|svg\+xml|mp4|webm|quicktime|ogg|pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/,
+          )
+        ) {
+          return callback(
+            new BadRequestException(
+              'Only media files (JPG, PNG, WEBP, GIF, SVG, MP4, WebM, MOV) or CV documents (PDF, DOC, DOCX) are allowed',
+            ),
+            false,
+          );
         }
         callback(null, true);
       },
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
-    // Check if an external host or standard host is provided via environment or request header
-    const forwardProto = req.headers['x-forwarded-proto'];
-    const protocol = (typeof forwardProto === 'string' ? forwardProto.split(',')[0].trim() : req.protocol) || 'https';
-    const host = req.headers['x-forwarded-host'] || req.get('host');
-    const baseUrl = process.env.PUBLIC_API_URL || `${protocol}://${host}`;
-    const fileUrl = `${baseUrl.replace(/\/$/, '')}/uploads/${file.filename}`;
-    return {
-      url: fileUrl,
-      filename: file.filename,
-    };
+
+    try {
+      // Determine Cloudinary resource type
+      let resourceType: 'image' | 'video' | 'raw' | 'auto' = 'auto';
+      if (file.mimetype.startsWith('video/')) {
+        resourceType = 'video';
+      } else if (
+        file.mimetype.includes('pdf') ||
+        file.mimetype.includes('word') ||
+        file.mimetype.includes('document')
+      ) {
+        resourceType = 'raw';
+      } else if (file.mimetype.startsWith('image/')) {
+        resourceType = 'image';
+      }
+
+      const result = await this.cloudinaryService.uploadStream(
+        file.buffer,
+        'rakibulhr-portfolio',
+        resourceType,
+      );
+
+      return {
+        url: result.secure_url || result.url,
+        public_id: result.public_id,
+        filename: file.originalname,
+        bytes: result.bytes,
+        format: result.format,
+      };
+    } catch (err: any) {
+      console.error('Cloudinary upload error:', err);
+      throw new BadRequestException(
+        `Failed to upload file to Cloudinary: ${err?.message || 'Unknown error'}`,
+      );
+    }
   }
 }
