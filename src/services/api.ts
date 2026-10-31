@@ -305,17 +305,48 @@ export const apiService = {
 
   async recordVisit(): Promise<number> {
     try {
-      // Record one visit per session
-      const hasVisited = sessionStorage.getItem('visited_session');
-      const method = hasVisited ? 'GET' : 'POST';
-      const res = await fetch(`${API_BASE_URL}/analytics/visit`, { method });
+      // 1. Filter out headless browsers / automated bots client-side
+      const isBot = navigator.webdriver || /bot|crawler|spider|headless/i.test(navigator.userAgent);
+      if (isBot) {
+        const res = await fetch(`${API_BASE_URL}/analytics/visit`, { method: 'GET' });
+        if (res.ok) {
+          const data = await res.json();
+          return data.visits;
+        }
+        return 1768;
+      }
+
+      // 2. Persistent unique device identifier (stored in localStorage)
+      let visitorId = localStorage.getItem('rakibulhr_visitor_id');
+      if (!visitorId) {
+        visitorId = 'vis_' + Math.random().toString(36).substring(2, 12) + '_' + Date.now().toString(36);
+        localStorage.setItem('rakibulhr_visitor_id', visitorId);
+      }
+
+      // 3. Prevent duplicate hits within the same day/session
+      const today = new Date().toISOString().slice(0, 10);
+      const lastRecordedDate = localStorage.getItem('rakibulhr_visit_recorded_date');
+      const isAlreadyRecordedToday = lastRecordedDate === today;
+
+      const method = isAlreadyRecordedToday ? 'GET' : 'POST';
+      const options: RequestInit = {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+      };
+      if (method === 'POST') {
+        options.body = JSON.stringify({ visitorId });
+      }
+
+      const res = await fetch(`${API_BASE_URL}/analytics/visit`, options);
       if (res.ok) {
         const data = await res.json();
-        sessionStorage.setItem('visited_session', 'true');
+        if (method === 'POST') {
+          localStorage.setItem('rakibulhr_visit_recorded_date', today);
+        }
         return data.visits;
       }
     } catch {}
-    return 1718;
+    return 1768;
   },
 
   // Upload image/media/document file from local device to Cloudinary via NestJS server
