@@ -313,7 +313,7 @@ export const apiService = {
           const data = await res.json();
           return data.visits;
         }
-        return 1768;
+        return 0;
       }
 
       // 2. Persistent unique device identifier (stored in localStorage)
@@ -346,7 +346,7 @@ export const apiService = {
         return data.visits;
       }
     } catch {}
-    return 1768;
+    return 0;
   },
 
   // Upload image/media/document file from local device to Cloudinary via NestJS server
