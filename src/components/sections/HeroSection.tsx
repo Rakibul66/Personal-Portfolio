@@ -119,8 +119,11 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
               <div className="relative rounded-3xl overflow-hidden border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900 shadow-2xl">
                 <div className="aspect-[4/4.5] w-full overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950">
                   <img
-                    src={profile.avatarUrl}
+                    src={resolveMediaUrl(profile.avatarUrl)}
                     alt={profile.name}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80";
+                    }}
                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>

@@ -11,7 +11,7 @@ import Header from "../components/sections/Header";
 import CleanFooter from "../components/sections/CleanFooter";
 import ParticleField from "../components/ParticleField";
 import Pagination from "../components/ui/Pagination";
-import { apiService, BlogData, ProfileData, resolveMediaUrl } from "../services/api";
+import { apiService, BlogData, ProfileData, resolveMediaUrl, DEFAULT_BLOG_THUMBNAIL } from "../services/api";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -147,8 +147,11 @@ export default function BlogPage() {
                   {blog.coverImage && (
                     <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-white/10">
                       <img
-                        src={resolveMediaUrl(blog.coverImage)}
+                        src={resolveMediaUrl(blog.coverImage, DEFAULT_BLOG_THUMBNAIL)}
                         alt={blog.title}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = DEFAULT_BLOG_THUMBNAIL;
+                        }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
