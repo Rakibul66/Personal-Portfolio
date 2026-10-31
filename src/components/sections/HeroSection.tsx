@@ -12,7 +12,7 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
   if (!profile) return null;
 
   return (
-    <section className="relative pt-6 sm:pt-10 pb-8 sm:pb-12 space-y-10">
+    <section className="relative pt-2 sm:pt-4 pb-6 sm:pb-10 space-y-10">
       {/* Background ambient lighting */}
       <div className="absolute top-0 right-0 -z-10 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 -z-10 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -113,11 +113,11 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
           className="lg:col-span-5 flex flex-col items-center lg:items-end gap-6"
         >
           {profile.avatarUrl ? (
-            <div className="relative group w-full max-w-sm">
-              <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-tr from-cyan-500 to-indigo-500 opacity-30 blur-lg group-hover:opacity-50 transition duration-500" />
+            <div className="relative group w-full max-w-[320px] sm:max-w-[340px] transform lg:rotate-1 hover:rotate-0 transition-transform duration-500 ease-out">
+              <div className="absolute -inset-1.5 rounded-[2rem] bg-gradient-to-tr from-cyan-500/30 to-indigo-500/30 opacity-40 blur-xl group-hover:opacity-60 transition duration-500" />
 
-              <div className="relative rounded-3xl overflow-hidden border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900 shadow-2xl">
-                <div className="aspect-[4/4.5] w-full overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950">
+              <div className="relative rounded-[2rem] overflow-hidden border border-slate-200/80 dark:border-white/15 bg-white dark:bg-slate-900 shadow-2xl">
+                <div className="aspect-[4/4.1] w-full overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-950">
                   <img
                     src={resolveMediaUrl(profile.avatarUrl)}
                     alt={profile.name}
@@ -128,10 +128,10 @@ export default function HeroSection({ profile, onOpenHireDialog }: HeroSectionPr
                   />
                 </div>
 
-                <div className="p-4 sm:p-5 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between">
+                <div className="p-3.5 sm:p-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between">
                   <div>
                     <h4 className="font-bold text-sm text-slate-900 dark:text-white">{profile.name}</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{profile.title}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{profile.title}</p>
                   </div>
                 </div>
               </div>
