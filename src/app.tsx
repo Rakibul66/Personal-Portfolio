@@ -192,7 +192,7 @@ export default function App() {
       <ParticleField />
       <Header brandName={liveProfile?.name} profile={liveProfile} />
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-28 pb-16 space-y-16 md:space-y-24">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-16 md:pt-20 pb-16 space-y-16 md:space-y-24">
         {/* Modern Professional Hero Section with Download CV Button & Visitor Count below */}
         {liveProfile && (
           <HeroSection
