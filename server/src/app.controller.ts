@@ -40,7 +40,7 @@ export class AppController {
     let stats = await this.prisma.analytics.findUnique({ where: { id: 'site_stats' } });
     if (!stats) {
       stats = await this.prisma.analytics.create({
-        data: { id: 'site_stats', visits: 1768 },
+        data: { id: 'site_stats', visits: 0 },
       });
     }
     return { visits: stats.visits };
@@ -54,7 +54,7 @@ export class AppController {
     // 1. Ignore automated bots, search crawlers, and scrapers
     if (BOT_REGEX.test(userAgent)) {
       const stats = await this.prisma.analytics.findUnique({ where: { id: 'site_stats' } });
-      return { visits: stats?.visits || 1768, recorded: false };
+      return { visits: stats?.visits || 0, recorded: false };
     }
 
     // 2. Extract genuine client IP (handles Cloudflare, Render, proxies)
@@ -85,7 +85,7 @@ export class AppController {
     // 4. If this unique visitor has already been counted in the last 24 hours, return current count without incrementing
     if (recentVisitorCache.has(fingerprint)) {
       const stats = await this.prisma.analytics.findUnique({ where: { id: 'site_stats' } });
-      return { visits: stats?.visits || 1768, recorded: false };
+      return { visits: stats?.visits || 0, recorded: false };
     }
 
     // Mark visitor as counted for 24h
@@ -95,7 +95,7 @@ export class AppController {
     const stats = await this.prisma.analytics.upsert({
       where: { id: 'site_stats' },
       update: { visits: { increment: 1 } },
-      create: { id: 'site_stats', visits: 1769 },
+      create: { id: 'site_stats', visits: 1 },
     });
 
     return { visits: stats.visits, recorded: true };
