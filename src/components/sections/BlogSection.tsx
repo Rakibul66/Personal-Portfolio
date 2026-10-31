@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, Clock, ArrowRight } from "lucide-react";
-import { apiService, BlogData, resolveMediaUrl } from "../../services/api";
+import { apiService, BlogData, resolveMediaUrl, DEFAULT_BLOG_THUMBNAIL } from "../../services/api";
 
 export default function BlogSection() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -40,11 +40,11 @@ export default function BlogSection() {
             {blog.coverImage && (
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-white/5">
                 <img
-                  src={resolveMediaUrl(blog.coverImage)}
+                  src={resolveMediaUrl(blog.coverImage, DEFAULT_BLOG_THUMBNAIL)}
                   alt={blog.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
+                    (e.target as HTMLImageElement).src = DEFAULT_BLOG_THUMBNAIL;
                   }}
                 />
               </div>

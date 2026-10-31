@@ -36,7 +36,7 @@ export default function Header({ brandName, profile }: HeaderProps) {
   const displayName = profile?.name || brandName || "";
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-transparent">
+    <header className="fixed top-0 left-0 w-full z-50 bg-slate-900/70 dark:bg-[#02050c]/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="h-16 sm:h-20 flex justify-between items-center">
           {/* Left section intentionally kept blank */}

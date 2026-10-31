@@ -116,32 +116,47 @@ export default function App() {
 
   useEffect(() => {
     let completed = 0;
+    let isMounted = true;
     const checkDone = () => {
       completed++;
-      if (completed >= 5) setIsSyncing(false);
+      if (completed >= 5 && isMounted) setIsSyncing(false);
     };
+
+    // Safety timeout: dismiss the syncing loader after 2.5 seconds regardless of network lags or cold starts
+    const timer = setTimeout(() => {
+      if (isMounted) setIsSyncing(false);
+    }, 2500);
 
     // Parallel background fetch from cloud PostgreSQL with automatic cache resolution
     apiService.getProjects().then((data) => {
-      if (data && Array.isArray(data)) setLiveProjects(data);
+      if (data && Array.isArray(data) && isMounted) setLiveProjects(data);
       checkDone();
-    });
+    }).catch(checkDone);
+
     apiService.getExperiences().then((data) => {
-      if (data && Array.isArray(data)) setLiveExperiences(data);
+      if (data && Array.isArray(data) && isMounted) setLiveExperiences(data);
       checkDone();
-    });
+    }).catch(checkDone);
+
     apiService.getProfile().then((data) => {
-      if (data) setLiveProfile(data);
+      if (data && isMounted) setLiveProfile(data);
       checkDone();
-    });
+    }).catch(checkDone);
+
     apiService.getShowcase().then((data) => {
-      if (data && Array.isArray(data)) setLiveShowcases(data);
+      if (data && Array.isArray(data) && isMounted) setLiveShowcases(data);
       checkDone();
-    });
+    }).catch(checkDone);
+
     apiService.getReferences().then((data) => {
-      if (data && Array.isArray(data)) setLiveReviews(data);
+      if (data && Array.isArray(data) && isMounted) setLiveReviews(data);
       checkDone();
-    });
+    }).catch(checkDone);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   // Dedicated Developer Intro Video from ProfileConfig, or categorized from showcase

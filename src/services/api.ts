@@ -2,9 +2,13 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-export function resolveMediaUrl(url?: string | null): string {
-  if (!url) return '';
-  let cleanUrl = url;
+// Default high-quality placeholder for mobile/web apps and tech projects
+export const DEFAULT_PROJECT_THUMBNAIL = 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80';
+export const DEFAULT_BLOG_THUMBNAIL = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80';
+
+export function resolveMediaUrl(url?: string | null, fallback?: string): string {
+  if (!url || typeof url !== 'string' || !url.trim()) return fallback || '';
+  let cleanUrl = url.trim();
   if (cleanUrl.startsWith('http://rakibulhr.onrender.com')) {
     cleanUrl = cleanUrl.replace('http://', 'https://');
   }
