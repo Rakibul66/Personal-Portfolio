@@ -16,9 +16,9 @@ import { apiService, BlogData, ProfileData, resolveMediaUrl, DEFAULT_BLOG_THUMBN
 const ARTICLES_PER_PAGE = 6;
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<BlogData[]>(() => apiService.getInitialBlogs());
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [loading, setLoading] = useState(false);
 
   // Search & Filter
   const [search, setSearch] = useState("");

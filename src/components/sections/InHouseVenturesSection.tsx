@@ -4,11 +4,11 @@ import { ArrowUpRight, Flame, Globe, ExternalLink, Sparkles, Building2, Trending
 import { apiService, VentureData, resolveMediaUrl } from "../../services/api";
 
 export default function InHouseVenturesSection() {
-  const [ventures, setVentures] = useState<VentureData[]>([]);
+  const [ventures, setVentures] = useState<VentureData[]>(() => apiService.getInitialVentures());
 
   useEffect(() => {
     apiService.getVentures().then((data) => {
-      if (data && data.length > 0) setVentures(data);
+      if (data) setVentures(data);
     });
   }, []);
 

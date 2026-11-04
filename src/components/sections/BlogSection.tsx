@@ -4,10 +4,12 @@ import { BookOpen, Calendar, Clock, ArrowRight } from "lucide-react";
 import { apiService, BlogData, resolveMediaUrl, DEFAULT_BLOG_THUMBNAIL } from "../../services/api";
 
 export default function BlogSection() {
-  const [blogs, setBlogs] = useState<BlogData[]>([]);
+  const [blogs, setBlogs] = useState<BlogData[]>(() => apiService.getInitialBlogs());
 
   useEffect(() => {
-    apiService.getBlogs().then((data) => setBlogs(data));
+    apiService.getBlogs().then((data) => {
+      if (data) setBlogs(data);
+    });
   }, []);
 
   if (blogs.length === 0) return null;

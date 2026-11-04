@@ -19,9 +19,9 @@ import { apiService, VentureData, ProfileData, resolveMediaUrl } from "../servic
 const VENTURES_PER_PAGE = 6;
 
 export default function VenturesPage() {
-  const [ventures, setVentures] = useState<VentureData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [ventures, setVentures] = useState<VentureData[]>(() => apiService.getInitialVentures());
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {

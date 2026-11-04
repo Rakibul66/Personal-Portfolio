@@ -7,11 +7,13 @@ import ContactForm from "../components/sections/ContactForm";
 import { apiService, ProfileData } from "../services/api";
 
 export default function ContactPage() {
-  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    apiService.getProfile().then((data) => setProfile(data));
+    apiService.getProfile().then((data) => {
+      if (data) setProfile(data);
+    });
   }, []);
 
   const email = profile?.email || "contact@rakibulhr.dev";

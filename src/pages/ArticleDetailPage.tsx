@@ -19,24 +19,25 @@ export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  const [article, setArticle] = useState<BlogData | null>(null);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [recentArticles, setRecentArticles] = useState<BlogData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [article, setArticle] = useState<BlogData | null>(() => apiService.getInitialBlogBySlug(slug));
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [recentArticles, setRecentArticles] = useState<BlogData[]>(() =>
+    apiService.getInitialBlogs().filter((b) => b.slug !== slug && b.id !== slug).slice(0, 3)
+  );
+  const [loading, setLoading] = useState(() => !apiService.getInitialBlogBySlug(slug));
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (!slug) return;
 
-    setLoading(true);
     Promise.all([
       apiService.getBlogBySlug(slug),
       apiService.getProfile(),
       apiService.getBlogs(),
     ])
       .then(([foundArticle, prof, allArticles]) => {
-        setArticle(foundArticle);
+        if (foundArticle) setArticle(foundArticle);
         if (prof) setProfile(prof);
         if (allArticles) {
           setRecentArticles(

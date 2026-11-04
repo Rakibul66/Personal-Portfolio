@@ -106,12 +106,12 @@ function HireDialog({ open, onClose }: HireDialogProps) {
 export default function App() {
   const [isHireDialogOpen, setIsHireDialogOpen] = useState(false);
 
-  // Dynamic Live Database States - pure database driven (no hardcoded seed data)
-  const [liveProjects, setLiveProjects] = useState<ProjectData[]>([]);
-  const [liveExperiences, setLiveExperiences] = useState<ExperienceData[]>([]);
-  const [liveProfile, setLiveProfile] = useState<ProfileData | null>(null);
-  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>([]);
-  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>([]);
+  // Dynamic Live Database States - Instant 0-second load using cache & pre-bundled data with background live sync
+  const [liveProjects, setLiveProjects] = useState<ProjectData[]>(() => apiService.getInitialProjects());
+  const [liveExperiences, setLiveExperiences] = useState<ExperienceData[]>(() => apiService.getInitialExperiences());
+  const [liveProfile, setLiveProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [liveShowcases, setLiveShowcases] = useState<ShowcaseVideoData[]>(() => apiService.getInitialShowcase());
+  const [liveReviews, setLiveReviews] = useState<ReferenceData[]>(() => apiService.getInitialReferences());
   const [isSyncing, setIsSyncing] = useState<boolean>(true);
 
   useEffect(() => {
@@ -122,19 +122,19 @@ export default function App() {
       if (completed >= 5 && isMounted) setIsSyncing(false);
     };
 
-    // Safety timeout: dismiss the syncing loader after 2.5 seconds regardless of network lags or cold starts
+    // Dismiss the syncing loader after 2.5 seconds regardless of network speed or cold starts
     const timer = setTimeout(() => {
       if (isMounted) setIsSyncing(false);
     }, 2500);
 
-    // Parallel background fetch from cloud PostgreSQL with automatic cache resolution
+    // Background fetch from cloud PostgreSQL - strictly sets whatever admin added to the database
     apiService.getProjects().then((data) => {
-      if (data && Array.isArray(data) && isMounted) setLiveProjects(data);
+      if (data && isMounted) setLiveProjects(data);
       checkDone();
     }).catch(checkDone);
 
     apiService.getExperiences().then((data) => {
-      if (data && Array.isArray(data) && isMounted) setLiveExperiences(data);
+      if (data && isMounted) setLiveExperiences(data);
       checkDone();
     }).catch(checkDone);
 
@@ -144,12 +144,12 @@ export default function App() {
     }).catch(checkDone);
 
     apiService.getShowcase().then((data) => {
-      if (data && Array.isArray(data) && isMounted) setLiveShowcases(data);
+      if (data && isMounted) setLiveShowcases(data);
       checkDone();
     }).catch(checkDone);
 
     apiService.getReferences().then((data) => {
-      if (data && Array.isArray(data) && isMounted) setLiveReviews(data);
+      if (data && isMounted) setLiveReviews(data);
       checkDone();
     }).catch(checkDone);
 

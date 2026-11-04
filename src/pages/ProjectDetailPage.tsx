@@ -18,23 +18,24 @@ export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [project, setProject] = useState<ProjectData | null>(null);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [relatedProjects, setRelatedProjects] = useState<ProjectData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState<ProjectData | null>(() => apiService.getInitialProjectById(id));
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [relatedProjects, setRelatedProjects] = useState<ProjectData[]>(() =>
+    apiService.getInitialProjects().filter((p) => p.id !== id).slice(0, 3)
+  );
+  const [loading, setLoading] = useState(() => !apiService.getInitialProjectById(id));
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (!id) return;
 
-    setLoading(true);
     Promise.all([
       apiService.getProjectById(id),
       apiService.getProfile(),
       apiService.getProjects(),
     ])
       .then(([foundProject, prof, allProjects]) => {
-        setProject(foundProject);
+        if (foundProject) setProject(foundProject);
         if (prof) setProfile(prof);
         if (allProjects) {
           setRelatedProjects(

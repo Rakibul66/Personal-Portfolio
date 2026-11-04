@@ -9,7 +9,7 @@ type CleanFooterProps = {
 
 export default function CleanFooter({ profile }: CleanFooterProps) {
   const currentYear = new Date().getFullYear();
-  const [visitorCount, setVisitorCount] = useState<number>(0);
+  const [visitorCount, setVisitorCount] = useState<number>(() => apiService.getInitialVisitCount());
 
   useEffect(() => {
     // Record and fetch genuine database visitor count

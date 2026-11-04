@@ -1,6 +1,27 @@
 // Dynamic API Client connected to NestJS + PostgreSQL
+import {
+  initialProfile,
+  initialProjects,
+  initialExperiences,
+  initialVentures,
+  initialBlogs,
+  initialShowcases,
+  initialReferences,
+} from "../data/initialData";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+// Timeout helper: prevents slow Render cold starts or offline backends from freezing the app
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 // Default high-quality placeholder for mobile/web apps and tech projects
 export const DEFAULT_PROJECT_THUMBNAIL = 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80';
@@ -156,24 +177,86 @@ function setCache<T>(key: string, data: T): void {
 }
 
 export const apiService = {
-  // Public Data Fetching with Instant Cache & Background Freshness
-  async getProfile(): Promise<ProfileData | null> {
-    const cached = getCached<ProfileData>('profile');
+  // Synchronous Initial Getters: Render entire UI within 0.1s (instant loading without blank frames)
+  getInitialProfile(): ProfileData {
+    return getCached<ProfileData>('profile') || initialProfile;
+  },
+
+  getInitialProjects(): ProjectData[] {
+    const cached = getCached<ProjectData[]>('projects');
+    return cached && cached.length > 0 ? cached : initialProjects;
+  },
+
+  getInitialExperiences(type?: string): ExperienceData[] {
+    const cacheKey = `experiences_${type || 'all'}`;
+    const cached = getCached<ExperienceData[]>(cacheKey);
+    if (cached && cached.length > 0) return cached;
+    if (type) return initialExperiences.filter((e) => e.type === type);
+    return initialExperiences;
+  },
+
+  getInitialVentures(): VentureData[] {
+    const cached = getCached<VentureData[]>('ventures');
+    return cached && cached.length > 0 ? cached : initialVentures;
+  },
+
+  getInitialBlogs(): BlogData[] {
+    const cached = getCached<BlogData[]>('blogs');
+    return cached && cached.length > 0 ? cached : initialBlogs;
+  },
+
+  getInitialShowcase(): ShowcaseVideoData[] {
+    const cached = getCached<ShowcaseVideoData[]>('showcase');
+    return cached && cached.length > 0 ? cached : initialShowcases;
+  },
+
+  getInitialReferences(): ReferenceData[] {
+    const cached = getCached<ReferenceData[]>('references');
+    return cached && cached.length > 0 ? cached : initialReferences;
+  },
+
+  getInitialProjectById(id?: string): ProjectData | null {
+    if (!id) return null;
+    const all = this.getInitialProjects();
+    return all.find((p) => p.id === id || p.title.toLowerCase() === id.toLowerCase()) || null;
+  },
+
+  getInitialBlogBySlug(slug?: string): BlogData | null {
+    if (!slug) return null;
+    const all = this.getInitialBlogs();
+    return all.find((b) => b.slug === slug || b.id === slug) || null;
+  },
+
+  getInitialVisitCount(): number {
     try {
-      const res = await fetch(`${API_BASE_URL}/profile`);
+      const cached = localStorage.getItem('rakibulhr_cached_visits');
+      return cached ? parseInt(cached, 10) : 0;
+    } catch {
+      return 0;
+    }
+  },
+
+  // Public Data Fetching with Stale-While-Revalidate & Resilient Fallbacks
+  async getProfile(): Promise<ProfileData> {
+    const fallback = getCached<ProfileData>('profile') || initialProfile;
+    try {
+      const res = await fetchWithTimeout(`${API_BASE_URL}/profile`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
-        setCache('profile', data);
-        return data;
+        if (data && data.name) {
+          setCache('profile', data);
+          return data;
+        }
       }
     } catch {}
-    return cached;
+    return fallback;
   },
 
   async getProjects(): Promise<ProjectData[]> {
     const cached = getCached<ProjectData[]>('projects');
+    const fallback = cached && cached.length > 0 ? cached : initialProjects;
     try {
-      const res = await fetch(`${API_BASE_URL}/projects`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/projects`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -182,25 +265,26 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async getProjectById(id: string): Promise<ProjectData | null> {
     try {
-      const res = await fetch(`${API_BASE_URL}/projects/${id}`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/projects/${id}`, {}, 5000);
       if (res.ok) {
         return await res.json();
       }
     } catch {}
     // Fallback to searching loaded projects list
     const projects = await this.getProjects();
-    return projects.find((p) => p.id === id) || null;
+    return projects.find((p) => p.id === id || p.title.toLowerCase() === id.toLowerCase()) || this.getInitialProjectById(id);
   },
 
   async getVentures(): Promise<VentureData[]> {
     const cached = getCached<VentureData[]>('ventures');
+    const fallback = cached && cached.length > 0 ? cached : initialVentures;
     try {
-      const res = await fetch(`${API_BASE_URL}/ventures`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/ventures`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -209,13 +293,14 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async getBlogs(): Promise<BlogData[]> {
     const cached = getCached<BlogData[]>('blogs');
+    const fallback = cached && cached.length > 0 ? cached : initialBlogs;
     try {
-      const res = await fetch(`${API_BASE_URL}/blogs`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/blogs`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -224,27 +309,33 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async getBlogBySlug(slug: string): Promise<BlogData | null> {
     try {
-      const res = await fetch(`${API_BASE_URL}/blogs/${slug}`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/blogs/${slug}`, {}, 5000);
       if (res.ok) {
         return await res.json();
       }
     } catch {}
     // Fallback search through getBlogs if direct slug fails
     const all = await this.getBlogs();
-    return all.find((b) => b.slug === slug || b.id === slug) || null;
+    return all.find((b) => b.slug === slug || b.id === slug) || this.getInitialBlogBySlug(slug);
   },
 
   async getExperiences(type?: string): Promise<ExperienceData[]> {
     const cacheKey = `experiences_${type || 'all'}`;
     const cached = getCached<ExperienceData[]>(cacheKey);
+    const fallback =
+      cached && cached.length > 0
+        ? cached
+        : type
+        ? initialExperiences.filter((e) => e.type === type)
+        : initialExperiences;
     try {
       const url = type ? `${API_BASE_URL}/profile/experiences?type=${type}` : `${API_BASE_URL}/profile/experiences`;
-      const res = await fetch(url);
+      const res = await fetchWithTimeout(url, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -253,13 +344,14 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async getReferences(): Promise<ReferenceData[]> {
     const cached = getCached<ReferenceData[]>('references');
+    const fallback = cached && cached.length > 0 ? cached : initialReferences;
     try {
-      const res = await fetch(`${API_BASE_URL}/profile/references`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/profile/references`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -268,13 +360,14 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async getShowcase(): Promise<ShowcaseVideoData[]> {
     const cached = getCached<ShowcaseVideoData[]>('showcase');
+    const fallback = cached && cached.length > 0 ? cached : initialShowcases;
     try {
-      const res = await fetch(`${API_BASE_URL}/showcase`);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/showcase`, {}, 5000);
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
@@ -283,16 +376,16 @@ export const apiService = {
         }
       }
     } catch {}
-    return cached && cached.length > 0 ? cached : [];
+    return fallback;
   },
 
   async submitMessage(payload: ContactMessagePayload): Promise<{ success: boolean; message: string }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/messages`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      });
+      }, 7000);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to send message');
@@ -308,12 +401,12 @@ export const apiService = {
       // 1. Filter out headless browsers / automated bots client-side
       const isBot = navigator.webdriver || /bot|crawler|spider|headless/i.test(navigator.userAgent);
       if (isBot) {
-        const res = await fetch(`${API_BASE_URL}/analytics/visit`, { method: 'GET' });
+        const res = await fetchWithTimeout(`${API_BASE_URL}/analytics/visit`, { method: 'GET' }, 4000);
         if (res.ok) {
           const data = await res.json();
           return data.visits;
         }
-        return 0;
+        return this.getInitialVisitCount();
       }
 
       // 2. Persistent unique device identifier (stored in localStorage)
@@ -337,16 +430,19 @@ export const apiService = {
         options.body = JSON.stringify({ visitorId });
       }
 
-      const res = await fetch(`${API_BASE_URL}/analytics/visit`, options);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/analytics/visit`, options, 4000);
       if (res.ok) {
         const data = await res.json();
         if (method === 'POST') {
           localStorage.setItem('rakibulhr_visit_recorded_date', today);
         }
-        return data.visits;
+        if (typeof data.visits === 'number') {
+          localStorage.setItem('rakibulhr_cached_visits', String(data.visits));
+          return data.visits;
+        }
       }
     } catch {}
-    return 0;
+    return this.getInitialVisitCount();
   },
 
   // Upload image/media/document file from local device to Cloudinary via NestJS server

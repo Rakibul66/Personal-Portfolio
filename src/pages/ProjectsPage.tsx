@@ -22,9 +22,9 @@ import { SectionSkeleton } from "../components/ui/Loaders";
 const ITEMS_PER_PAGE = 6;
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<ProjectData[]>(() => apiService.getInitialProjects());
+  const [profile, setProfile] = useState<ProfileData>(() => apiService.getInitialProfile());
+  const [loading, setLoading] = useState(false);
 
   // Filters & State
   const [search, setSearch] = useState("");
